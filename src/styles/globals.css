@@ -451,3 +451,218 @@
   }
 }
 /* #endregion Animation */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+html,
+body {
+  font-family: var(--font-ibm-plex-sans-thai) !important;
+
+  @apply h-screen border-0 overflow-x-hidden overflow-y-auto font-normal;
+}
+
+body {
+  @apply font-sans bg-bg-white-0 text-text-strong-950 leading-7;
+}
+
+body::-webkit-scrollbar {
+  @apply bg-transparent w-2.5;
+}
+
+body::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  @apply bg-bg-sub-300 rounded-4xl bg-clip-padding border-2 border-transparent;
+}
+
+* {
+  color-scheme: light;
+
+  --tw-light: initial;
+  --tw-dark: ;
+
+  @variant dark {
+    color-scheme: dark;
+
+    --tw-light: ;
+    --tw-dark: initial;
+  }
+}
+
+.font-display {
+  font-family: var(--font-reddit-sans) !important;
+}
+
+#sidebar::-webkit-scrollbar,
+#search::-webkit-scrollbar {
+  @apply bg-transparent w-2.5;
+}
+
+#sidebar::-webkit-scrollbar-track,
+#search::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb,
+#search::-webkit-scrollbar-thumb {
+  @apply rounded-4xl bg-clip-padding border-2 border-transparent;
+}
+
+#search::-webkit-scrollbar-thumb {
+  @apply bg-bg-soft-200;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  @apply bg-transparent;
+}
+
+#sidebar:hover {
+  @apply bg-transparent;
+}
+
+#sidebar:hover::-webkit-scrollbar-thumb {
+  @apply bg-bg-soft-200;
+}
+
+.code-block::-webkit-scrollbar {
+  @apply w-1 h-1 bg-transparent transition-colors duration-200 ease-in-out;
+}
+
+.code-block:hover::-webkit-scrollbar {
+  @apply w-1 h-1;
+}
+
+.code-block::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.code-block::-webkit-scrollbar-thumb {
+  @apply bg-transparent rounded-4xl;
+}
+
+.code-block:hover::-webkit-scrollbar-thumb {
+  @apply bg-bg-soft-200 rounded-4xl;
+}
+
+ul, ol, li {
+  @apply py-0 my-0;
+}
+
+ul, ol {
+  @apply gap-4;
+}
+
+.main-content > ul,
+.main-content > ol,
+ul li ul:not(:last-child),
+ol li ol:not(:last-child),
+ul li ol:not(:last-child),
+ol li ul:not(:last-child),
+.callout > ul  {
+  @apply mb-4;
+}
+
+ul li:last-child,
+ol li:last-child,
+ol li > div:last-child,
+ul li > div:last-child,
+ul li .callout:last-child,
+ol li .callout:last-child,
+.callout > *:last-child {
+  @apply mb-0;
+}
+
+ul li > p:last-child,
+ol li > p:last-child,
+ul li pre:last-child > div,
+ol li pre:last-child > div {
+  @apply my-0;
+}
+
+.icon-link {
+  @apply relative pl-6 -ml-6;
+}
+
+.icon-link::before {
+  @apply lg:content-['#'] absolute font-mono -translate-x-[150%] block opacity-0 transition-opacity duration-300 ease-in-out;
+}
+
+h1:hover .icon-link::before,
+h2:hover .icon-link::before,
+h3:hover .icon-link::before,
+h4:hover .icon-link::before {
+  @apply lg:content-['#'] absolute font-mono -translate-x-[150%] block opacity-100;
+}
+
+.shiki-themes {
+  @apply bg-transparent!;
+}
+
+.callout-title p {
+  @apply mb-0;
+}
+
+.callout[data-callout-type='warning'] a,
+.callout[data-callout-type='warning'] .callout-title code ,
+.callout[data-callout-type='danger'] a,
+.callout[data-callout-type='danger'] .callout-title code {
+  @apply text-red-800 dark:text-red-300;
+}
+
+.callout[data-callout-type='info'] a,
+.callout[data-callout-type='info'] .callout-title code ,
+.callout[data-callout-type='tip'] a,
+.callout[data-callout-type='tip'] .callout-title code {
+  @apply text-orange-800 dark:text-orange-300;
+}
+
+.callout-content > p:last-child,
+.callout-content > div:last-child {
+  @apply mb-0;
+}
+
+th, td {
+  @apply p-2;
+}
+
+table {
+  @apply table-fixed min-w-170 border-collapse;
+}
+
+table thead tr {
+  @apply border-b border-b-stroke-soft-200 align-top bg-bg-weak-50 text-sm [&_code]:text-xs;
+}
+
+table tbody tr {
+  @apply align-top text-sm [&_code]:text-xs;
+}
+
+table tbody tr:not(:last-child) {
+  @apply border-b border-b-stroke-soft-200;
+}
+
+.table-wrapper::-webkit-scrollbar {
+  @apply w-1 h-1 bg-transparent transition-colors duration-200 ease-in-out;
+}
+
+.table-wrapper:hover::-webkit-scrollbar {
+  @apply w-1 h-1;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  @apply bg-transparent rounded-4xl;
+}
+
+.table-wrapper:hover::-webkit-scrollbar-thumb {
+  @apply bg-bg-soft-200 rounded-4xl;
+}
