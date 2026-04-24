@@ -3,6 +3,8 @@ import Headings from './headings';
 import ExternalLink from './external-link';
 import BulletList from './bullet-list';
 import OrderedList from './ordered-list';
+import InlineCode from './inline-code';
+import CodeBlock from './code-block';
 
 const components = {
   h1: (props) => <Headings.H1 {...props} />,
@@ -14,6 +16,21 @@ const components = {
   ul: (props) => <BulletList {...props} />,
   ol: (props) => <OrderedList {...props} />,
   strong: (props) => <strong className="font-semibold! [&_code]:font-bold" {...props} />,
+  pre: (props) => {
+    const { children, className } = props.children.props;
+    const languageMatch = /language-(\w+)/.exec(className ?? '');
+    const filePathMatch = /:(.+)$/.exec(className ?? '');
+
+    return (
+      <CodeBlock
+        code={(children as string).replace(/\n$/, '')}
+        language={languageMatch ? languageMatch[1] : ''}
+        filePath={filePathMatch ? filePathMatch[1] : undefined}
+        enableCopy={props.copy === 'true'}
+      />
+    );
+  },
+  code: (props) => <InlineCode>{props.children}</InlineCode>,
 } satisfies MDXComponents;
 
 export const getMDXComponents = (): MDXComponents => {
