@@ -5,6 +5,7 @@ import BulletList from './bullet-list';
 import OrderedList from './ordered-list';
 import InlineCode from './inline-code';
 import CodeBlock from './code-block';
+import * as Divider from '../common/divider';
 
 const components = {
   h1: (props) => <Headings.H1 {...props} />,
@@ -15,6 +16,7 @@ const components = {
   a: (props) => <ExternalLink {...props} />,
   ul: (props) => <BulletList {...props} />,
   ol: (props) => <OrderedList {...props} />,
+  hr: (props) => <Divider.Root variant="line" className="mt-10" {...props} />,
   strong: (props) => <strong className="font-semibold! [&_code]:font-bold" {...props} />,
   pre: (props) => {
     const { children, className } = props.children.props;
