@@ -6,6 +6,7 @@ import OrderedList from './ordered-list';
 import InlineCode from './inline-code';
 import CodeBlock from './code-block';
 import * as Divider from '../common/divider';
+import Table from './table';
 
 const components = {
   h1: (props) => <Headings.H1 {...props} />,
@@ -33,6 +34,7 @@ const components = {
     );
   },
   code: (props) => <InlineCode>{props.children}</InlineCode>,
+  table: (props) => <Table>{props.children}</Table>,
 } satisfies MDXComponents;
 
 export const getMDXComponents = (): MDXComponents => {
