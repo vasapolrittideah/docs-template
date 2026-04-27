@@ -1,8 +1,10 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import * as Button from '../common/button';
 import * as Kbd from '../common/kbd';
 import { RiSearchLine } from '@remixicon/react';
+import SearchModal from './search-modal';
 
 const IconCmd = (props: React.SVGProps<SVGSVGElement>) => {
   return (
@@ -20,6 +22,9 @@ interface SearchButtonProps {
 }
 
 const SearchButton = ({ disabled = false }: SearchButtonProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <>
       <div className="lg:absolute lg:left-1/2 lg:w-full lg:max-w-xs lg:-translate-x-1/2">
@@ -38,6 +43,8 @@ const SearchButton = ({ disabled = false }: SearchButtonProps) => {
           </Kbd.Root>
         </Button.Root>
       </div>
+
+      <SearchModal searchInputRef={searchInputRef} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 };
