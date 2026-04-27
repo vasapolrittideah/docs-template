@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate-git-metadata": "tsx scripts/generate-git-metadata.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
