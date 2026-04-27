@@ -32,7 +32,7 @@ const SearchButton = ({ disabled = false }: SearchButtonProps) => {
           variant="neutral"
           mode="stroke"
           className="flex w-10 justify-center p-0 font-normal lg:w-full lg:p-3"
-          onClick={() => {}}
+          onClick={() => setIsModalOpen(true)}
           disabled={disabled}>
           <RiSearchLine size={22} />
           <span className="text-text-strong-500 hidden lg:ml-2 lg:block">ค้นหา</span>
