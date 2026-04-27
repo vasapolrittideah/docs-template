@@ -7,6 +7,7 @@ const BundledLanguage = {
   json: () => import('@shikijs/langs/json'),
   swift: () => import('@shikijs/langs/swift'),
   kts: () => import('@shikijs/langs/kts'),
+  yaml: () => import('@shikijs/langs/yaml'),
 };
 
 const BundledTheme = {
