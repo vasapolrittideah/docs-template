@@ -9,14 +9,14 @@ import * as Divider from '../common/divider';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RiArrowRightSLine } from '@remixicon/react';
 import SidebarSkeleton from './sidebar-skeleton';
-import { SerializableNavGroup } from '@/types/mdx';
+import { SidebarGroup } from '@/types/mdx';
 
 interface SidebarProps {
   className?: string;
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
-  const navGroups = useSidebarStore((state) => state.navGroups);
+  const navGroups = useSidebarStore((state) => state.groups);
   const pathname = usePathname();
 
   // Store user's manual toggle preferences
@@ -51,7 +51,7 @@ const Sidebar = ({ className }: SidebarProps) => {
     return merged;
   }, [userToggledGroups, activeGroupIndex, isGroupPage]);
 
-  const handleGroupClick = (e: MouseEvent<HTMLAnchorElement>, group: SerializableNavGroup, index: number) => {
+  const handleGroupClick = (e: MouseEvent<HTMLAnchorElement>, group: SidebarGroup, index: number) => {
     const isCurrentGroupPage = pathname === `/docs/${group.group}`;
     if (isCurrentGroupPage) {
       e.preventDefault();

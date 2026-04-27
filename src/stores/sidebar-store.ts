@@ -1,12 +1,12 @@
-import { SerializableNavGroup } from '@/types/mdx';
+import { SidebarGroup } from '@/types/mdx';
 import { create } from 'zustand';
 
 interface SidebarStore {
-  navGroups: SerializableNavGroup[];
-  setNavGroups: (navGroups: SerializableNavGroup[]) => void;
+  groups: SidebarGroup[];
+  setGroups: (navGroups: SidebarGroup[]) => void;
 }
 
 export const useSidebarStore = create<SidebarStore>((set) => ({
-  navGroups: [],
-  setNavGroups: (navGroups) => set({ navGroups }),
+  groups: [],
+  setGroups: (navGroups) => set({ groups: navGroups }),
 }));

@@ -14,7 +14,7 @@ interface DocsShellProps {
 }
 
 const DocsShell = ({ children }: DocsShellProps) => {
-  const navGroups = useSidebarStore((state) => state.navGroups);
+  const navGroups = useSidebarStore((state) => state.groups);
   const pathname = usePathname();
 
   const isRootPage = pathname === '/docs' || pathname === '/docs/';

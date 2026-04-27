@@ -1,15 +1,15 @@
 'use client';
 
 import { useSidebarStore } from '@/stores/sidebar-store';
-import { SerializableNavGroup } from '@/types/mdx';
+import { SidebarGroup } from '@/types/mdx';
 import { useEffect, useRef } from 'react';
 
 interface SidebarInitializerProps {
-  navGroups: SerializableNavGroup[];
+  navGroups: SidebarGroup[];
 }
 
 export const SidebarInitializer = ({ navGroups }: SidebarInitializerProps) => {
-  const setNavGroups = useSidebarStore((state) => state.setNavGroups);
+  const setNavGroups = useSidebarStore((state) => state.setGroups);
   const hasInitialized = useRef(false);
 
   useEffect(() => {

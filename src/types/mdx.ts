@@ -1,6 +1,17 @@
 import type { Metadata } from 'next/types';
 import { FC } from 'react';
 
+export interface NavigationPage {
+  slug: string;
+  title: string;
+}
+
+export interface NavigationGroup {
+  slug: string;
+  title: string;
+  pages: NavigationPage[];
+}
+
 export interface DocMetadata extends Metadata {
   title: string;
   description: string;
@@ -16,18 +27,13 @@ export interface DocPage {
   lastAuthor: string | null;
 }
 
-export interface NavGroup {
-  title: string;
-  pages: DocPage[];
-}
-
 // Serializable versions for Client Components (excludes functions)
-export type SerializableDocPage = Omit<DocPage, 'component'>;
+export type SidebarPage = Omit<DocPage, 'component'>;
 
-export interface SerializableNavGroup {
+export interface SidebarGroup {
   title: string;
   group: string;
-  pages: SerializableDocPage[];
+  pages: SidebarPage[];
 }
 
 export interface ParagraphBlock {

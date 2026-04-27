@@ -1,71 +1,34 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import _ from 'lodash';
-import { SerializableDocPage, SerializableNavGroup, DocPage, DocMetadata, HeadingNode } from '@/types/mdx';
+import { SidebarPage, SidebarGroup, DocPage, DocMetadata, HeadingNode, NavigationGroup } from '@/types/mdx';
 import { getLastAuthor, getLastModified } from './git';
 
 const DOCS_PATH = path.join(process.cwd(), 'src', 'docs');
 
-// Parse a numeric-prefixed name (e.g., "01-introduction") into order and clean slug
-const parsePrefixedName = (name: string): { order: number; slug: string } => {
-  const match = /^(\d+)-(.+)$/.exec(name);
-  if (match) {
-    return { order: parseInt(match[1], 10), slug: match[2] };
-  }
-  return { order: Infinity, slug: name };
+// Read and parse the root navigation.json
+const readRootMeta = async (): Promise<NavigationGroup[]> => {
+  const metaPath = path.join(DOCS_PATH, 'navigation.json');
+  const content = await fs.readFile(metaPath, 'utf-8');
+  return JSON.parse(content) as NavigationGroup[];
 };
 
-// Resolve a clean group slug to its prefixed directory name
-const resolveGroupDir = async (group: string): Promise<string> => {
-  const entries = await fs.readdir(DOCS_PATH);
-  const match = entries.find((entry) => parsePrefixedName(entry).slug === group);
-  if (!match) throw new Error(`Group not found: ${group}`);
-  return match;
-};
-
-// Resolve a clean page slug to its prefixed filename (without extension)
-const resolveSlugFile = async (groupDir: string, slug: string): Promise<string> => {
-  const files = await fs.readdir(path.join(DOCS_PATH, groupDir));
-  const match = files.find(
-    (file) => file.endsWith('.mdx') && parsePrefixedName(file.replace(/\.mdx$/, '')).slug === slug,
-  );
-  if (!match) throw new Error(`Page not found: ${slug} in ${groupDir}`);
-  return match.replace(/\.mdx$/, '');
-};
-
-// List all documentation groups (directories), sorted by numeric prefix, returning clean slugs
+// List all documentation groups in the order defined by navigation.json
 export const listDocGroups = async (): Promise<string[]> => {
-  const entries = await fs.readdir(DOCS_PATH);
-
-  const dirs = await Promise.all(
-    entries.map(async (entry) => {
-      const stat = await fs.stat(path.join(DOCS_PATH, entry));
-      if (!stat.isDirectory()) return null;
-      const { order, slug } = parsePrefixedName(entry);
-      return { order, slug };
-    }),
-  );
-
-  return dirs
-    .filter((d): d is { order: number; slug: string } => d !== null)
-    .sort((a, b) => a.order - b.order)
-    .map((d) => d.slug);
+  const meta = await readRootMeta();
+  return meta.map((g) => g.slug);
 };
 
-// List all documentation slugs within a specific group, sorted by numeric prefix, returning clean slugs
+// List all documentation slugs within a specific group in the order defined by navigation.json
 export const listDocSlugs = async (group: string): Promise<string[]> => {
-  const groupDir = await resolveGroupDir(group);
-  const files = await fs.readdir(path.join(DOCS_PATH, groupDir));
-
-  return files
-    .filter((file) => file.endsWith('.mdx'))
-    .map((file) => parsePrefixedName(file.replace(/\.mdx$/, '')))
-    .sort((a, b) => a.order - b.order)
-    .map((f) => f.slug);
+  const meta = await readRootMeta();
+  const groupEntry = meta.find((g) => g.slug === group);
+  if (!groupEntry) throw new Error(`Group not found: ${group}`);
+  return groupEntry.pages.map((p) => p.slug);
 };
 
 // List all documentation pages across all groups
-export const listDocPages = async (): Promise<SerializableDocPage[]> => {
+export const listDocPages = async (): Promise<SidebarPage[]> => {
   const groups = await listDocGroups();
 
   const result = await Promise.all(
@@ -92,15 +55,13 @@ export const listDocPages = async (): Promise<SerializableDocPage[]> => {
   return result.flat();
 };
 
-// Get a specific documentation page by group and slug (both are clean, prefix-stripped values)
+// Get a specific documentation page by group and slug
 export const getDocPage = async (group: string, slug: string): Promise<DocPage> => {
   try {
-    const groupDir = await resolveGroupDir(group);
-    const fileName = await resolveSlugFile(groupDir, slug);
-    const lastModified = getLastModified(`src/docs/${groupDir}/${fileName}.mdx`);
-    const lastAuthor = getLastAuthor(`src/docs/${groupDir}/${fileName}.mdx`);
+    const lastModified = getLastModified(`src/docs/${group}/${slug}.mdx`);
+    const lastAuthor = getLastAuthor(`src/docs/${group}/${slug}.mdx`);
 
-    const mdxModule = await import(`@/docs/${groupDir}/${fileName}.mdx`);
+    const mdxModule = await import(`@/docs/${group}/${slug}.mdx`);
 
     const metadata: DocMetadata = {
       ...mdxModule.metadata,
@@ -109,7 +70,7 @@ export const getDocPage = async (group: string, slug: string): Promise<DocPage> 
       updatedDate: mdxModule.metadata?.updatedDate ? new Date(mdxModule.metadata.updatedDate) : undefined,
     };
 
-    const mdxFilePath = path.join(process.cwd(), 'src', 'docs', groupDir, `${fileName}.mdx`);
+    const mdxFilePath = path.join(DOCS_PATH, group, `${slug}.mdx`);
     const rawContent = await fs.readFile(mdxFilePath, 'utf-8');
 
     return {
@@ -126,50 +87,36 @@ export const getDocPage = async (group: string, slug: string): Promise<DocPage> 
   }
 };
 
-// Read _meta.json from a group directory if it exists
-const readGroupMeta = async (groupDir: string): Promise<{ title?: string; pages?: Record<string, string> }> => {
-  try {
-    const metaPath = path.join(DOCS_PATH, groupDir, '_meta.json');
-    const content = await fs.readFile(metaPath, 'utf-8');
-    return JSON.parse(content);
-  } catch {
-    return {};
-  }
-};
-
-// Get meta for a specific group by clean slug
+// Get meta for a specific group by slug
 export const getGroupMeta = async (group: string): Promise<{ title?: string; pages?: Record<string, string> }> => {
-  const groupDir = await resolveGroupDir(group);
-  return readGroupMeta(groupDir);
+  const meta = await readRootMeta();
+  const groupEntry = meta.find((g) => g.slug === group);
+  if (!groupEntry) return {};
+  return {
+    title: groupEntry.title,
+    pages: Object.fromEntries(groupEntry.pages.map((p) => [p.slug, p.title])),
+  };
 };
 
-// Get navigation groups for sidebar (order derived from filesystem numeric prefixes)
-export const getNavGroups = async (): Promise<SerializableNavGroup[]> => {
-  const groups = await listDocGroups();
+// Get navigation groups for sidebar (order derived from navigation.json)
+export const getNavGroups = async (): Promise<SidebarGroup[]> => {
+  const meta = await readRootMeta();
 
   const navGroups = await Promise.all(
-    groups.map(async (group) => {
-      const groupDir = await resolveGroupDir(group);
-      const meta = await readGroupMeta(groupDir);
-      const slugs = await listDocSlugs(group);
-
+    meta.map(async (groupEntry) => {
       const pages = await Promise.all(
-        slugs.map(async (slug) => {
-          const docPage = await getDocPage(group, slug);
+        groupEntry.pages.map(async ({ slug, title }) => {
+          const docPage = await getDocPage(groupEntry.slug, slug);
           const page = _.omit(docPage, 'component');
-
-          if (meta.pages?.[slug]) {
-            page.metadata = { ...page.metadata, title: meta.pages[slug] };
-          }
-
+          page.metadata = { ...page.metadata, title };
           return page;
         }),
       );
 
       return {
-        title: meta.title ?? _.startCase(group),
+        title: groupEntry.title,
         pages,
-        group,
+        group: groupEntry.slug,
       };
     }),
   );
