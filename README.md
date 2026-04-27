@@ -1,36 +1,250 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# docs-template
+
+A documentation site template built with Next.js, MDX, and Tailwind CSS. Write your docs in MDX files, configure navigation with a single JSON file, and get a fully-featured docs site with syntax highlighting, full-text search, table of contents, dark mode, and more — out of the box.
+
+## Features
+
+- **MDX-based content** — Write documentation in Markdown with JSX component support
+- **File-based routing** — Pages map directly to `src/docs/[group]/[slug].mdx`
+- **JSON-driven navigation** — Define sidebar structure in `src/docs/navigation.json`
+- **Syntax highlighting** — Powered by [Shiki](https://shiki.style/) with copy-to-clipboard support
+- **Full-text search** — Client-side fuzzy search using [Fuse.js](https://www.fusejs.io/)
+- **Table of contents** — Auto-generated from headings in each MDX page
+- **Dark / light mode** — Theme toggling with [next-themes](https://github.com/pacocoursey/next-themes)
+- **Git metadata** — Last modified date and author pulled from Git history
+- **Callouts** — Info, warning, and danger callout blocks via [rehype-callouts](https://github.com/lin-stephanie/rehype-callouts)
+- **Responsive layout** — Sidebar drawer for mobile, sticky sidebar for desktop
+
+## Tech Stack
+
+| Area | Library |
+| ---- | ------- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| MDX | [@next/mdx](https://nextjs.org/docs/app/building-your-application/configuring/mdx), [@mdx-js/react](https://mdxjs.com) |
+| Syntax highlighting | [Shiki](https://shiki.style/) |
+| Search | [Fuse.js](https://www.fusejs.io/) |
+| Animations | [Framer Motion](https://www.framer.com/motion/) |
+| Icons | [Remixicon](https://remixicon.com/) |
+| State management | [Zustand](https://zustand-demo.pmnd.rs/) |
+| Components | [Radix UI](https://www.radix-ui.com/) |
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) 20+
+- [Bun](https://bun.sh/) (recommended) — the project uses Bun as the package manager
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone https://github.com/your-username/docs-template.git
+cd docs-template
+```
+
+Or use it as a GitHub template by clicking **"Use this template"** on the repository page.
+
+### 2. Install dependencies
+
+```bash
+bun install
+```
+
+### 3. Start the development server
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:4000](http://localhost:4000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+src/
+├── app/
+│   ├── layout.tsx              # Root layout
+│   └── docs/
+│       ├── layout.tsx          # Docs layout (header + sidebar + TOC)
+│       └── [group]/[slug]/
+│           └── page.tsx        # Dynamic doc page renderer
+├── components/
+│   ├── common/                 # Shared UI primitives
+│   ├── docs/                   # Docs-specific components
+│   ├── layout/                 # Header, sidebar, footer, TOC
+│   └── mdx/                    # MDX component overrides
+├── docs/
+│   ├── navigation.json         # Sidebar navigation config
+│   └── [group]/
+│       └── [slug].mdx          # Documentation content files
+└── lib/
+    ├── mdx.ts                  # MDX file reading utilities
+    ├── git.ts                  # Git metadata helpers
+    └── search.ts               # Search index builder
+```
 
-## Learn More
+## Writing Documentation
 
-To learn more about Next.js, take a look at the following resources:
+### Adding a new page
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create an MDX file under `src/docs/[group]/[slug].mdx`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```mdx
+   export const metadata = {
+     title: 'My Page Title | Site Name',
+     description: 'A short description of this page.',
+   }
 
-## Deploy on Vercel
+   # My Page Title
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Content goes here.
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Register the page in `src/docs/navigation.json`:
+
+   ```json
+   [
+     {
+       "slug": "my-group",
+       "title": "My Group",
+       "pages": [
+         { "slug": "my-page", "title": "My Page Title" }
+       ]
+     }
+   ]
+   ```
+
+The page will be available at `/docs/my-group/my-page`.
+
+### Adding a new group
+
+Add a new entry to the top-level array in `navigation.json`:
+
+```json
+[
+  {
+    "slug": "getting-started",
+    "title": "Getting Started",
+    "pages": [
+      { "slug": "introduction", "title": "Introduction" },
+      { "slug": "installation", "title": "Installation" }
+    ]
+  },
+  {
+    "slug": "guides",
+    "title": "Guides",
+    "pages": [
+      { "slug": "configuration", "title": "Configuration" }
+    ]
+  }
+]
+```
+
+### Using MDX components
+
+The following components are available in every MDX file without importing:
+
+| Component | Usage |
+| --------- | ----- |
+| `Callout` | Highlighted info/warning/danger blocks |
+| `CodeBlock` | Fenced code blocks with syntax highlighting |
+| `InlineCode` | Inline `code` spans |
+| `ExternalLink` | Links that open in a new tab |
+
+To use `Callout`, import it at the top of your MDX file:
+
+```mdx
+import Callout from '../../components/mdx/callout';
+
+<Callout type="info">
+  This is an informational callout.
+</Callout>
+```
+
+Supported `type` values: `info`, `warning`, `danger`.
+
+### Code block options
+
+Pass props directly on the opening fence to configure code blocks:
+
+````mdx
+```ts copy="true"
+const greeting = 'Hello, world!';
+```
+````
+
+| Prop | Values | Description |
+| ---- | ------ | ----------- |
+| `copy` | `"true"` / `"false"` | Show copy-to-clipboard button (default `"false"`) |
+
+#### Displaying a file path
+
+Append `:path/to/file` to the language identifier to show a file path header above the code block:
+
+````mdx
+```ts:src/lib/mdx.ts
+import fs from 'node:fs/promises';
+```
+````
+
+The text after `:` is rendered as a label in the code block header. It does not affect syntax highlighting.
+
+## Customization
+
+### Site metadata
+
+Edit `src/app/layout.tsx` to update the site title, description, and other metadata.
+
+### Logo
+
+Replace the logo rendered in `src/components/docs/docs-logo.tsx`.
+
+### Theme colors
+
+Tailwind CSS v4 uses CSS custom properties. Update the design tokens in `src/styles/globals.css`.
+
+### Navigation structure
+
+The sidebar order matches the order of entries in `src/docs/navigation.json`. Reorder entries there to change the sidebar order.
+
+## Pre-build Scripts
+
+### Search index
+
+The full-text search index is built from your MDX content and must be generated before the dev server or production build. This runs **automatically** as part of `bun dev` and `bun build`, so you rarely need to call it manually:
+
+```bash
+bun run generate-search-index
+```
+
+### Git metadata
+
+Each doc page can display the last modified date and author pulled from `git log`. This is a separate step that must be run before the build:
+
+```bash
+bun run generate-git-metadata
+```
+
+This script also runs automatically via **lint-staged** on every commit, so the metadata stays up to date as you commit changes.
+
+## Available Scripts
+
+| Script | Description |
+| ------ | ----------- |
+| `bun dev` | Generate search index, then start development server on port 4000 |
+| `bun build` | Generate search index, then build for production |
+| `bun start` | Start production server on port 4000 |
+| `bun lint` | Run ESLint |
+| `bun run generate-search-index` | Build the full-text search index from MDX content |
+| `bun run generate-git-metadata` | Pre-generate Git last-modified metadata for all doc pages (also runs via lint-staged on commit) |
+
+## Deployment
+
+Deploy to any platform that supports Next.js:
+
+- **[Vercel](https://vercel.com/)** — Import the repository and deploy with zero configuration.
+- **[Netlify](https://netlify.com/)** — Use the Next.js build plugin.
+- **Self-hosted** — Run `bun build && bun start` on any Node.js server.
+
+> **Note:** The search index is generated automatically by `bun build`. If you want last-modified Git metadata on your pages, prepend `bun run generate-git-metadata` to your build command: `bun run generate-git-metadata && bun run build`.
