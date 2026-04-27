@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate-search-index": "tsx scripts/generate-search-index.ts",
     "generate-git-metadata": "tsx scripts/generate-git-metadata.ts",
-    "dev": "next dev -p 4000",
+    "dev": "bun run generate-search-index && next dev -p 4000",
+    "build": "bun run generate-search-index && next build",
     "start": "next start -p 4000",
-    "build": "next build",
     "lint": "eslint",
     "prepare": "husky"
   },
