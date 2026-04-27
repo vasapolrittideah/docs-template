@@ -1,3 +1,5 @@
+import Footer from '@/components/layout/footer';
+import DocsBreadcrumb from '@/components/docs/docs-breadcrumb';
 import { TOCInitializer } from '@/components/docs/toc-initializer';
 import { getDocPage, getGroupMeta, getTOCHeadings, listDocPages } from '@/lib/mdx';
 
@@ -16,7 +18,9 @@ const DocPage = async ({ params }: DocPageProps) => {
   return (
     <>
       <TOCInitializer headings={headings} />
+      <DocsBreadcrumb group={group} groupTitle={groupMeta.title} docTitle={groupMeta.pages?.[slug] ?? metadata.title} />
       <MDXComponent />
+      <Footer lastModified={lastModified} lastAuthor={lastAuthor} />
     </>
   );
 };
