@@ -1,18 +1,10 @@
 import createMDX from '@next/mdx';
+import createNextIntlPlugin from 'next-intl/plugin';
 import type { NextConfig } from 'next';
 import { version } from './package.json';
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  redirects: async () => {
-    return [
-      {
-        source: '/',
-        destination: '/docs',
-        permanent: true,
-      },
-    ];
-  },
   env: {
     version,
   },
@@ -25,4 +17,6 @@ const withMDX = createMDX({
   },
 });
 
-export default withMDX(nextConfig);
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
+export default withNextIntl(withMDX(nextConfig));
