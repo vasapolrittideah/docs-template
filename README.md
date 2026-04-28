@@ -70,6 +70,10 @@ src/
 │   └── [locale]/
 │       ├── layout.tsx          # Locale layout (NextIntlClientProvider, ThemeProvider)
 │       ├── page.tsx            # Redirects to /[locale]/docs
+│       ├── not-found.tsx       # Locale-aware 404 page
+│       ├── error.tsx           # Locale-aware error page
+│       ├── [...rest]/
+│       │   └── page.tsx        # Catch-all that triggers [locale]/not-found
 │       └── docs/
 │           ├── layout.tsx      # Docs layout (header + sidebar + TOC)
 │           ├── page.tsx        # Docs root page
@@ -92,10 +96,14 @@ src/
 ├── i18n/
 │   ├── routing.ts              # Locale list and default locale
 │   └── request.ts              # Server-side next-intl config
-└── lib/
-    ├── mdx.ts                  # MDX file reading utilities (locale-aware)
-    ├── git.ts                  # Git metadata helpers
-    └── search.ts               # Search index builder
+├── messages/
+│   ├── en.json                 # English UI strings
+│   └── th.json                 # Thai UI strings
+├── lib/
+│   ├── mdx.ts                  # MDX file reading utilities (locale-aware)
+│   ├── git.ts                  # Git metadata helpers
+│   └── search.ts               # Search index builder
+└── proxy.ts                    # next-intl middleware for locale routing
 ```
 
 ## Writing Documentation
