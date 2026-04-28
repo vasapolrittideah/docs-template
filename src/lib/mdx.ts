@@ -4,40 +4,40 @@ import _ from 'lodash';
 import { SidebarPage, SidebarGroup, DocPage, DocMetadata, HeadingNode, NavigationGroup } from '@/types/mdx';
 import { getLastAuthor, getLastModified } from './git';
 
-const DOCS_PATH = path.join(process.cwd(), 'src', 'docs');
+const DOCS_PATH = (locale: string) => path.join(process.cwd(), 'src', 'docs', locale);
 
-// Read and parse the root navigation.json
-const readRootMeta = async (): Promise<NavigationGroup[]> => {
-  const metaPath = path.join(DOCS_PATH, 'navigation.json');
+// Read and parse the root navigation.json for a given locale
+const readRootMeta = async (locale: string): Promise<NavigationGroup[]> => {
+  const metaPath = path.join(DOCS_PATH(locale), 'navigation.json');
   const content = await fs.readFile(metaPath, 'utf-8');
   return JSON.parse(content) as NavigationGroup[];
 };
 
 // List all documentation groups in the order defined by navigation.json
-export const listDocGroups = async (): Promise<string[]> => {
-  const meta = await readRootMeta();
+export const listDocGroups = async (locale: string): Promise<string[]> => {
+  const meta = await readRootMeta(locale);
   return meta.map((g) => g.slug);
 };
 
 // List all documentation slugs within a specific group in the order defined by navigation.json
-export const listDocSlugs = async (group: string): Promise<string[]> => {
-  const meta = await readRootMeta();
+export const listDocSlugs = async (locale: string, group: string): Promise<string[]> => {
+  const meta = await readRootMeta(locale);
   const groupEntry = meta.find((g) => g.slug === group);
   if (!groupEntry) throw new Error(`Group not found: ${group}`);
   return groupEntry.pages.map((p) => p.slug);
 };
 
 // List all documentation pages across all groups
-export const listDocPages = async (): Promise<SidebarPage[]> => {
-  const groups = await listDocGroups();
+export const listDocPages = async (locale: string): Promise<SidebarPage[]> => {
+  const groups = await listDocGroups(locale);
 
   const result = await Promise.all(
     groups.map(async (group) => {
-      const slugs = await listDocSlugs(group);
+      const slugs = await listDocSlugs(locale, group);
 
       return Promise.all(
         slugs.map(async (slug) => {
-          const { metadata, rawContent, lastModified, lastAuthor } = await getDocPage(group, slug);
+          const { metadata, rawContent, lastModified, lastAuthor } = await getDocPage(locale, group, slug);
 
           return {
             group,
@@ -55,13 +55,13 @@ export const listDocPages = async (): Promise<SidebarPage[]> => {
   return result.flat();
 };
 
-// Get a specific documentation page by group and slug
-export const getDocPage = async (group: string, slug: string): Promise<DocPage> => {
+// Get a specific documentation page by locale, group and slug
+export const getDocPage = async (locale: string, group: string, slug: string): Promise<DocPage> => {
   try {
-    const lastModified = getLastModified(`src/docs/${group}/${slug}.mdx`);
-    const lastAuthor = getLastAuthor(`src/docs/${group}/${slug}.mdx`);
+    const lastModified = getLastModified(`src/docs/${locale}/${group}/${slug}.mdx`);
+    const lastAuthor = getLastAuthor(`src/docs/${locale}/${group}/${slug}.mdx`);
 
-    const mdxModule = await import(`@/docs/${group}/${slug}.mdx`);
+    const mdxModule = await import(`@/docs/${locale}/${group}/${slug}.mdx`);
 
     const metadata: DocMetadata = {
       ...mdxModule.metadata,
@@ -70,7 +70,7 @@ export const getDocPage = async (group: string, slug: string): Promise<DocPage> 
       updatedDate: mdxModule.metadata?.updatedDate ? new Date(mdxModule.metadata.updatedDate) : undefined,
     };
 
-    const mdxFilePath = path.join(DOCS_PATH, group, `${slug}.mdx`);
+    const mdxFilePath = path.join(DOCS_PATH(locale), group, `${slug}.mdx`);
     const rawContent = await fs.readFile(mdxFilePath, 'utf-8');
 
     return {
@@ -83,13 +83,16 @@ export const getDocPage = async (group: string, slug: string): Promise<DocPage> 
       lastAuthor,
     };
   } catch (error) {
-    throw new Error(`Error loading document page /${group}/${slug}: ${(error as Error).message}`);
+    throw new Error(`Error loading document page /${locale}/${group}/${slug}: ${(error as Error).message}`);
   }
 };
 
 // Get meta for a specific group by slug
-export const getGroupMeta = async (group: string): Promise<{ title?: string; pages?: Record<string, string> }> => {
-  const meta = await readRootMeta();
+export const getGroupMeta = async (
+  locale: string,
+  group: string,
+): Promise<{ title?: string; pages?: Record<string, string> }> => {
+  const meta = await readRootMeta(locale);
   const groupEntry = meta.find((g) => g.slug === group);
   if (!groupEntry) return {};
   return {
@@ -99,14 +102,14 @@ export const getGroupMeta = async (group: string): Promise<{ title?: string; pag
 };
 
 // Get navigation groups for sidebar (order derived from navigation.json)
-export const getNavGroups = async (): Promise<SidebarGroup[]> => {
-  const meta = await readRootMeta();
+export const getNavGroups = async (locale: string): Promise<SidebarGroup[]> => {
+  const meta = await readRootMeta(locale);
 
   const navGroups = await Promise.all(
     meta.map(async (groupEntry) => {
       const pages = await Promise.all(
         groupEntry.pages.map(async ({ slug, title }) => {
-          const docPage = await getDocPage(groupEntry.slug, slug);
+          const docPage = await getDocPage(locale, groupEntry.slug, slug);
           const page = _.omit(docPage, 'component');
           page.metadata = { ...page.metadata, title };
           return page;
