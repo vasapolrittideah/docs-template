@@ -30,5 +30,15 @@
   },
   "DocsPage": {
     "placeholder": "This is the root page of the documentation. Customize it to fit your needs."
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "Sorry! We couldn't find the page you were looking for.",
+    "back": "Go back home"
+  },
+  "Error": {
+    "title": "Something went wrong",
+    "description": "Sorry! We encountered an error.",
+    "back": "Go back home"
   }
 }
