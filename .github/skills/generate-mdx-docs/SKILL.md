@@ -44,7 +44,7 @@ Import only what you use. All imports use a path relative to the MDX file.
 
 | Component | Import | Usage |
 |---|---|---|
-| `Callout` | `import Callout from '../../components/mdx/callout'` | Info/tip/warning/danger boxes |
+| `Callout` | `import Callout from '@/components/mdx/callout'` | Info/tip/warning/danger boxes |
 
 All other elements (headings, paragraphs, lists, tables, inline code, code blocks, links, dividers `---`) are auto-mapped — **no import needed**.
 
