@@ -156,8 +156,9 @@ const getSection = (markdown: string): SectionNode[] => {
   return sections;
 };
 
-const loadDocContents = async (): Promise<DocContent[]> => {
+const loadDocContents = async (locale: string): Promise<DocContent[]> => {
   const contents: DocContent[] = [];
+  const localePath = path.join(DOCS_PATH, locale);
 
   const walk = async (dir: string) => {
     const files = await fs.readdir(dir);
@@ -171,7 +172,7 @@ const loadDocContents = async (): Promise<DocContent[]> => {
       } else if (file.endsWith('.mdx')) {
         const rawContent = await fs.readFile(fullPath, 'utf-8');
         const slug = fullPath
-          .replace(DOCS_PATH, '')
+          .replace(localePath, '')
           .replace(/\\/g, '/')
           .replace(/\.mdx$/, '')
           .replace(/^\/+/, '')
@@ -184,15 +185,15 @@ const loadDocContents = async (): Promise<DocContent[]> => {
     }
   };
 
-  await walk(DOCS_PATH);
+  await walk(localePath);
 
   return contents;
 };
 
-export const getAllSections = async (): Promise<Record<string, SectionNode[]>> => {
+const getAllSections = async (locale: string): Promise<Record<string, SectionNode[]>> => {
   const sections: Record<string, SectionNode[]> = {};
 
-  const contents = await loadDocContents();
+  const contents = await loadDocContents(locale);
   contents.forEach(({ slug, rawContent }) => {
     const sectionsForSlug = getSection(rawContent);
     sections[slug] = sectionsForSlug;
@@ -219,7 +220,9 @@ const flattenListItems = (items: ListItemNode[]): string[] => {
   return result;
 };
 
-const buildSearchIndex = async (): Promise<{
+const buildSearchIndex = async (
+  locale: string,
+): Promise<{
   headings: HeadingSearchIndexItem[];
   contents: ContentSearchIndexItem[];
 }> => {
@@ -286,7 +289,7 @@ const buildSearchIndex = async (): Promise<{
     section.children.forEach((child) => walkSection(child, slug, path));
   };
 
-  for (const [slug, sections] of Object.entries(await getAllSections())) {
+  for (const [slug, sections] of Object.entries(await getAllSections(locale))) {
     sections.forEach((section) => walkSection(section, slug));
   }
 
@@ -294,10 +297,23 @@ const buildSearchIndex = async (): Promise<{
 };
 
 const generateSearchIndex = async () => {
-  const searchIndex = await buildSearchIndex();
+  const localeEntries = await fs.readdir(DOCS_PATH, { withFileTypes: true });
+  const locales = localeEntries.filter((e) => e.isDirectory()).map((e) => e.name);
 
-  await fs.writeFile(`${OUTPUT_PATH}/heading-search-index.json`, JSON.stringify(searchIndex.headings), 'utf-8');
-  await fs.writeFile(`${OUTPUT_PATH}/content-search-index.json`, JSON.stringify(searchIndex.contents), 'utf-8');
+  for (const locale of locales) {
+    const searchIndex = await buildSearchIndex(locale);
+    await fs.writeFile(
+      `${OUTPUT_PATH}/heading-search-index.${locale}.json`,
+      JSON.stringify(searchIndex.headings),
+      'utf-8',
+    );
+    await fs.writeFile(
+      `${OUTPUT_PATH}/content-search-index.${locale}.json`,
+      JSON.stringify(searchIndex.contents),
+      'utf-8',
+    );
+    console.log(`Generated search index for locale: ${locale}`);
+  }
 
   console.log('Search index generated successfully.');
 };

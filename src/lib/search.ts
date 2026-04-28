@@ -1,10 +1,10 @@
 import type { RangeTuple } from 'fuse.js';
 import { ContentSearchIndexItem, HeadingSearchIndexItem, SearchIndex, SnippetData } from '@/types/search';
 
-let searchIndex: SearchIndex | null = null;
+const searchIndexCache: Partial<Record<string, SearchIndex>> = {};
 
-export const getSearchIndex = async () => {
-  if (!searchIndex) {
+export const getSearchIndex = async (locale: string) => {
+  if (!searchIndexCache[locale]) {
     let headings: HeadingSearchIndexItem[];
     let contents: ContentSearchIndexItem[];
 
@@ -14,21 +14,21 @@ export const getSearchIndex = async () => {
       const path = await import('path');
       const publicDir = path.resolve(process.cwd(), 'public');
 
-      headings = JSON.parse(fs.readFileSync(path.join(publicDir, 'heading-search-index.json'), 'utf-8'));
-      contents = JSON.parse(fs.readFileSync(path.join(publicDir, 'content-search-index.json'), 'utf-8'));
+      headings = JSON.parse(fs.readFileSync(path.join(publicDir, `heading-search-index.${locale}.json`), 'utf-8'));
+      contents = JSON.parse(fs.readFileSync(path.join(publicDir, `content-search-index.${locale}.json`), 'utf-8'));
     } else {
       // Browser — fetch relative to the current origin (no hardcoded localhost)
-      const headingRes = await fetch('/heading-search-index.json');
+      const headingRes = await fetch(`/heading-search-index.${locale}.json`);
       headings = await headingRes.json();
 
-      const contentRes = await fetch('/content-search-index.json');
+      const contentRes = await fetch(`/content-search-index.${locale}.json`);
       contents = await contentRes.json();
     }
 
-    searchIndex = { headings, contents };
+    searchIndexCache[locale] = { headings, contents };
   }
 
-  return searchIndex;
+  return searchIndexCache[locale]!;
 };
 
 // Get snippet text with highlighted matches

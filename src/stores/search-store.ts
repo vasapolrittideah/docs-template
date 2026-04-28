@@ -28,31 +28,36 @@ const contentFuseOptions: IFuseOptions<ContentSearchIndexItem> = {
 interface SearchStore {
   isReady: boolean;
   isLoading: boolean;
+  locale: string | null;
   headingFuse: Fuse<HeadingSearchIndexItem> | null;
   contentFuse: Fuse<ContentSearchIndexItem> | null;
-  loadIndex: () => Promise<void>;
+  loadIndex: (locale: string) => Promise<void>;
   search: (query: string) => FuseResult<SearchIndexItem>[];
 }
 
 export const useSearchStore = create<SearchStore>((set, get) => ({
   isReady: false,
   isLoading: false,
+  locale: null,
   headingFuse: null,
   contentFuse: null,
 
-  loadIndex: async () => {
-    const { isReady, isLoading } = get();
+  loadIndex: async (locale: string) => {
+    const { isLoading, locale: currentLocale, isReady } = get();
 
-    // Don't load if already ready or currently loading
-    if (isReady || isLoading) return;
+    // Already loaded for this locale
+    if (currentLocale === locale && isReady) return;
 
-    set({ isLoading: true });
+    // Currently loading
+    if (isLoading) return;
+
+    set({ isLoading: true, isReady: false });
 
     try {
-      const data = await getSearchIndex();
+      const data = await getSearchIndex(locale);
       const headingFuse = new Fuse(data.headings, headingFuseOptions);
       const contentFuse = new Fuse(data.contents, contentFuseOptions);
-      set({ headingFuse, contentFuse, isReady: true, isLoading: false });
+      set({ headingFuse, contentFuse, isReady: true, isLoading: false, locale });
     } catch (error) {
       console.error('Failed to load search index:', error);
       set({ isLoading: false });

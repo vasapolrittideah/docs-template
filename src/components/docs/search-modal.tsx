@@ -19,7 +19,7 @@ import { getSearchSnippet } from '@/lib/search';
 import Link from 'next/link';
 import { SearchIndexItem } from '@/types/search';
 import { useSearchStore } from '@/stores/search-store';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 interface SearchModalProps {
@@ -54,6 +54,7 @@ const HighlightSnippet = ({
 
 const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
   const router = useRouter();
+  const { locale } = useParams<{ locale: string }>();
   const { search, isReady, isLoading, loadIndex } = useSearchStore();
   const t = useTranslations('Search');
   const [results, setResults] = useState<FuseResult<SearchIndexItem>[] | null>(null);
@@ -64,10 +65,10 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
 
   // Load search index when modal opens
   useEffect(() => {
-    if (isOpen && !isReady && !isLoading) {
-      loadIndex();
+    if (isOpen && !isLoading) {
+      loadIndex(locale);
     }
-  }, [isOpen, isReady, isLoading, loadIndex]);
+  }, [isOpen, isLoading, loadIndex, locale]);
 
   const handleClose = useCallback(() => {
     setResults(null);
@@ -131,7 +132,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
           if (selectedIndex >= 0 && selectedIndex < results.length) {
             e.preventDefault();
             const selectedResult = results[selectedIndex];
-            router.push(`/docs/${selectedResult.item.slug}`);
+            router.push(`/${locale}/docs/${selectedResult.item.slug}`);
             handleClose();
           }
           // Otherwise, let the form submit handle the search
@@ -141,7 +142,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, handleClose, results, selectedIndex, router, isNavigating]);
+  }, [isOpen, handleClose, results, selectedIndex, router, isNavigating, locale]);
 
   useEffect(() => {
     searchInputRef.current?.focus();
@@ -230,7 +231,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
                       resultRefs.current[index] = el;
                     }}
                     key={index}
-                    href={`/docs/${result.item.slug}`}
+                    href={`/${locale}/docs/${result.item.slug}`}
                     onMouseEnter={() => setSelectedIndex(index)}
                     onClick={() => handleClose()}
                     className={twMerge(
