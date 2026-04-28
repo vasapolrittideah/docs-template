@@ -117,7 +117,7 @@ Structure:
 4. **Map** the extracted content to MDX conventions:
    - Page title → `metadata.title` and `# H1`
    - First paragraph → `metadata.description` and opening summary paragraph
-   - Major sections → `##` headings separated by `---`
+   - Major sections → `#` H1 and `##` H2 headings separated by `---`
    - Subsections → `###` headings
    - Code samples → fenced code blocks with the correct language tag and `copy="true"`
    - Warnings/notes/tips → `<Callout>` with appropriate `type`
