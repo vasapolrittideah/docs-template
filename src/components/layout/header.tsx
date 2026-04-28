@@ -2,6 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import DocsLogo from '../docs/docs-logo';
 import ThemeToggler from '../docs/theme-toggler';
 import SearchButton from '../docs/search-button';
+import LocaleSwitcher from '../docs/locale-switcher';
 
 interface HeaderProps {
   disabled?: boolean;
@@ -21,6 +22,7 @@ const Header = ({ disabled = false, className }: HeaderProps) => {
         <SearchButton disabled={disabled} />
 
         <div className="flex h-full items-center justify-end gap-3 lg:ml-auto">
+          <LocaleSwitcher />
           <ThemeToggler />
         </div>
       </div>
