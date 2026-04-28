@@ -1,1 +1,34 @@
-{}
+{
+  "PrevNext": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "Search": {
+    "button": "Search",
+    "placeholder": "Search docs",
+    "loading": "Loading...",
+    "clear": "Clear",
+    "noResults": "No results found",
+    "close": "Close",
+    "open": "Open",
+    "search": "Search",
+    "navigate": "Navigate",
+    "resultsCount": "{count} results"
+  },
+  "EditOnGitHub": {
+    "label": "Edit this page"
+  },
+  "LastModified": {
+    "editedOn": "Edited on",
+    "by": "by"
+  },
+  "Sidebar": {
+    "label": "Documentation"
+  },
+  "TOC": {
+    "label": "On this page"
+  },
+  "DocsPage": {
+    "placeholder": "This is the root page of the documentation. Customize it to fit your needs."
+  }
+}

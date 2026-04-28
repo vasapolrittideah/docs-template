@@ -1,1 +1,34 @@
-{}
+{
+  "PrevNext": {
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป"
+  },
+  "Search": {
+    "button": "ค้นหา",
+    "placeholder": "ค้นหาเอกสาร",
+    "loading": "กำลังโหลด...",
+    "clear": "ล้าง",
+    "noResults": "ไม่พบผลลัพธ์การค้นหา",
+    "close": "ปิด",
+    "open": "เปิด",
+    "search": "ค้นหา",
+    "navigate": "เลือก",
+    "resultsCount": "ผลการค้นหา {count} รายการ"
+  },
+  "EditOnGitHub": {
+    "label": "แก้ไขหน้านี้"
+  },
+  "LastModified": {
+    "editedOn": "แก้ไขเมื่อ",
+    "by": "โดย"
+  },
+  "Sidebar": {
+    "label": "เอกสาร"
+  },
+  "TOC": {
+    "label": "เนื้อหาในหน้านี้"
+  },
+  "DocsPage": {
+    "placeholder": "นี่คือหน้าหลักของเอกสาร กรุณาปรับแต่งตามต้องการ"
+  }
+}
