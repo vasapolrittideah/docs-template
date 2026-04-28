@@ -6,8 +6,10 @@ import TOC from '../layout/toc';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 const TOCDropdown = () => {
+  const t = useTranslations('TOC');
   const [align, setAlign] = useState<'start' | 'end'>('start');
   const [isOpen, setIsOpen] = useState(false);
   const isOpenRef = useRef(isOpen);
@@ -35,7 +37,7 @@ const TOCDropdown = () => {
       <Dropdown.Trigger asChild>
         <div role="button" className="mx-4 my-2 cursor-pointer">
           <div className="text-text-sub-600 hover:text-text-strong-950 flex items-center gap-1 text-sm select-none">
-            <span>เนื้อหาในหน้านี้</span>
+            <span>{t('label')}</span>
             <motion.div animate={{ rotate: isOpen ? 90 : 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
               <RiArrowRightSLine size={16} />
             </motion.div>

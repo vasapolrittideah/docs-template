@@ -5,6 +5,7 @@ import * as Button from '../common/button';
 import * as Kbd from '../common/kbd';
 import { RiSearchLine } from '@remixicon/react';
 import SearchModal from './search-modal';
+import { useTranslations } from 'next-intl';
 
 const IconCmd = (props: React.SVGProps<SVGSVGElement>) => {
   return (
@@ -24,6 +25,7 @@ interface SearchButtonProps {
 const SearchButton = ({ disabled = false }: SearchButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations('Search');
 
   return (
     <>
@@ -35,7 +37,7 @@ const SearchButton = ({ disabled = false }: SearchButtonProps) => {
           onClick={() => setIsModalOpen(true)}
           disabled={disabled}>
           <RiSearchLine size={22} />
-          <span className="text-text-strong-500 hidden lg:ml-2 lg:block">ค้นหา</span>
+          <span className="text-text-strong-500 hidden lg:ml-2 lg:block">{t('button')}</span>
           <Kbd.Root className="ml-auto hidden lg:flex">
             <IconCmd className="size-2.5" />
             <span>+</span>

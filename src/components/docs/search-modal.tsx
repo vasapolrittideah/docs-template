@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { SearchIndexItem } from '@/types/search';
 import { useSearchStore } from '@/stores/search-store';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface SearchModalProps {
   searchInputRef: React.RefObject<HTMLInputElement | null>;
@@ -54,6 +55,7 @@ const HighlightSnippet = ({
 const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
   const router = useRouter();
   const { search, isReady, isLoading, loadIndex } = useSearchStore();
+  const t = useTranslations('Search');
   const [results, setResults] = useState<FuseResult<SearchIndexItem>[] | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const resultRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -198,7 +200,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
             <Input.Wrapper>
               <RiSearchLine size={28} className="text-text-sub-600" />
               <Input.Input
-                placeholder={isLoading ? 'กำลังโหลด...' : 'ค้นหาเอกสาร'}
+                placeholder={isLoading ? t('loading') : t('placeholder')}
                 ref={searchInputRef}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -206,7 +208,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
               <div
                 onClick={handleClear}
                 className="text-text-sub-600 border-r-stroke-sub-300 cursor-pointer border-r px-2 leading-none select-none">
-                ล้าง
+                {t('clear')}
               </div>
               <RiCloseLargeLine size={24} className="text-text-sub-600 cursor-pointer" onClick={handleClose} />
             </Input.Wrapper>
@@ -217,7 +219,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
         {results !== null && (
           <div id="search" ref={scrollContainerRef} className="overflow-x-hidden overflow-y-auto px-4">
             <div className="flex flex-col items-center gap-6">
-              {results.length === 0 && <div className="text-text-soft-400 my-12">ไม่พบผลลัพธ์การค้นหา</div>}
+              {results.length === 0 && <div className="text-text-soft-400 my-12">{t('noResults')}</div>}
             </div>
 
             {results.length > 0 && (
@@ -281,10 +283,10 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
         <div className="bg-bg-white-0 border-stroke-soft-200 flex h-13 w-full items-center justify-between rounded-br-2xl rounded-bl-2xl border-t p-4">
           <div className="hidden select-none md:flex">
             <Kbd.Root className="w-fit">ESC</Kbd.Root>
-            <span className="text-text-sub-600 pl-2 text-sm">ปิด</span>
+            <span className="text-text-sub-600 pl-2 text-sm">{t('close')}</span>
 
             <Kbd.Root className="ml-4 w-fit">ENTER</Kbd.Root>
-            <span className="text-text-sub-600 pl-2 text-sm">{selectedIndex >= 0 ? 'เปิด' : 'ค้นหา'}</span>
+            <span className="text-text-sub-600 pl-2 text-sm">{selectedIndex >= 0 ? t('open') : t('search')}</span>
 
             <Kbd.Root className="ml-4 w-5 px-1">
               <RiArrowUpLongLine size={13} />
@@ -292,9 +294,11 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
             <Kbd.Root className="ml-1 w-5 px-1">
               <RiArrowDownLongLine size={13} />
             </Kbd.Root>
-            <span className="text-text-sub-600 pl-2 text-sm">เลือก</span>
+            <span className="text-text-sub-600 pl-2 text-sm">{t('navigate')}</span>
           </div>
-          <div className="text-text-soft-400 text-sm select-none">ผลการค้นหา {results ? results.length : 0} รายการ</div>
+          <div className="text-text-soft-400 text-sm select-none">
+            {t('resultsCount', { count: results ? results.length : 0 })}
+          </div>
         </div>
       </div>
     </div>

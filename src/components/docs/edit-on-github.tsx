@@ -2,9 +2,11 @@
 
 import { RiPencilLine } from '@remixicon/react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const EditOnGitHub = () => {
   const pathname = usePathname();
+  const t = useTranslations('EditOnGitHub');
 
   return (
     <div
@@ -12,7 +14,7 @@ const EditOnGitHub = () => {
       onClick={() => {
         window.open(`${process.env.GIT_REPO_URL}/blob/main/src/${pathname}.md`, '_blank');
       }}>
-      <RiPencilLine size={18} /> <span className="ml-1">แก้ไขหน้านี้</span>
+      <RiPencilLine size={18} /> <span className="ml-1">{t('label')}</span>
     </div>
   );
 };

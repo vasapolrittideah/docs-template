@@ -3,15 +3,18 @@
 import { RiMenu2Line } from '@remixicon/react';
 import * as Drawer from '../common/drawer';
 import Sidebar from '../layout/sidebar';
+import { useTranslations } from 'next-intl';
 
 const SidebarDrawer = () => {
+  const t = useTranslations('Sidebar');
+
   return (
     <Drawer.Root>
       <Drawer.Trigger asChild>
         <button className="my-2 ml-4 cursor-pointer">
           <div className="text-text-sub-600 hover:text-text-strong-950 flex items-center gap-1.5 text-sm select-none">
             <RiMenu2Line size={12} />
-            <span>เอกสาร</span>
+            <span>{t('label')}</span>
           </div>
         </button>
       </Drawer.Trigger>

@@ -7,12 +7,14 @@ import * as Divider from '../common/divider';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSidebarStore } from '@/stores/sidebar-store';
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 
 const PrevNext = () => {
   const router = useRouter();
   const pathname = usePathname();
   const sidebarGroups = useSidebarStore((state) => state.sidebarGroups);
   const flattenedSidebarGroups = sidebarGroups.flatMap((group) => group.pages);
+  const t = useTranslations('PrevNext');
 
   const getDocUrl = (group: string, slug: string) => `/docs/${group}/${slug}`;
 
@@ -54,7 +56,7 @@ const PrevNext = () => {
               <RiArrowLeftLine size={20} />
             </div>
             <div className="flex w-full flex-col items-start gap-0.5">
-              <span>ก่อนหน้า</span>
+              <span>{t('previous')}</span>
               <span className="w-full truncate pr-8 text-start text-lg text-orange-600">{prevPage.metadata.title}</span>
             </div>
           </Button.Root>
@@ -69,7 +71,7 @@ const PrevNext = () => {
             onClick={() => router.push(getDocUrl(nextPage.group, nextPage.slug))}
             className="flex h-20 w-full items-center justify-end gap-3 hover:translate-x-1 sm:w-[50%]">
             <div className="flex w-full flex-col items-end gap-0.5">
-              <span>ถัดไป</span>
+              <span>{t('next')}</span>
               <span className="w-full truncate pl-8 text-end text-lg text-orange-600">{nextPage.metadata.title}</span>
             </div>
             <div className="w-fit">
