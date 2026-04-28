@@ -5,7 +5,7 @@ import { RiMoonFill, RiSunFill } from '@remixicon/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import * as Button from '@/components/common/button';
-import { useTheme } from 'next-themes';
+import { useTheme } from '@teispace/next-themes';
 import { useEffect, useState } from 'react';
 
 const ThemeToggler = () => {
