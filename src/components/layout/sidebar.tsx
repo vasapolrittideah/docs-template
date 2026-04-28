@@ -16,7 +16,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
-  const navGroups = useSidebarStore((state) => state.groups);
+  const sidebarGroups = useSidebarStore((state) => state.sidebarGroups);
   const pathname = usePathname();
 
   // Store user's manual toggle preferences
@@ -32,12 +32,12 @@ const Sidebar = ({ className }: SidebarProps) => {
 
   // Find the group containing the current page (supports both group and slug pages)
   const activeGroupIndex = useMemo(() => {
-    return navGroups.findIndex(
+    return sidebarGroups.findIndex(
       (group) =>
         `/docs/${group.group}` === pathname ||
         group.pages.some((page) => `/docs/${page.group}/${page.slug}` === pathname),
     );
-  }, [navGroups, pathname]);
+  }, [sidebarGroups, pathname]);
 
   const isGroupPage = pathname.split('/').filter(Boolean).length === 2;
 
@@ -63,11 +63,11 @@ const Sidebar = ({ className }: SidebarProps) => {
     });
   };
 
-  if (navGroups.length === 0) return <SidebarSkeleton className={className} />;
+  if (sidebarGroups.length === 0) return <SidebarSkeleton className={className} />;
 
   return (
     <nav id="sidebar" className={twMerge('flex flex-col px-8 py-6', className)}>
-      {navGroups.map((group, index) => (
+      {sidebarGroups.map((group, index) => (
         <div key={group.title}>
           <h3 className="text-text-strong-950 text-sm font-semibold uppercase select-none">
             <Link

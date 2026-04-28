@@ -11,8 +11,8 @@ import { useMemo } from 'react';
 const PrevNext = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const navGroups = useSidebarStore((state) => state.groups);
-  const flattenedNavGroups = navGroups.flatMap((group) => group.pages);
+  const sidebarGroups = useSidebarStore((state) => state.sidebarGroups);
+  const flattenedSidebarGroups = sidebarGroups.flatMap((group) => group.pages);
 
   const getDocUrl = (group: string, slug: string) => `/docs/${group}/${slug}`;
 
@@ -21,9 +21,9 @@ const PrevNext = () => {
 
   const { prevPage, nextPage } = useMemo(() => {
     if (isGroupPage) {
-      const groupIndex = navGroups.findIndex((g) => `/docs/${g.group}` === pathname);
-      const prevGroup = groupIndex > 0 ? navGroups[groupIndex - 1] : null;
-      const currentGroup = navGroups[groupIndex];
+      const groupIndex = sidebarGroups.findIndex((g) => `/docs/${g.group}` === pathname);
+      const prevGroup = groupIndex > 0 ? sidebarGroups[groupIndex - 1] : null;
+      const currentGroup = sidebarGroups[groupIndex];
 
       return {
         prevPage: prevGroup ? prevGroup.pages[prevGroup.pages.length - 1] : null,
@@ -31,13 +31,14 @@ const PrevNext = () => {
       };
     }
 
-    const currentLinkIndex = flattenedNavGroups.findIndex((page) => getDocUrl(page.group, page.slug) === pathname);
+    const currentLinkIndex = flattenedSidebarGroups.findIndex((page) => getDocUrl(page.group, page.slug) === pathname);
 
     return {
-      prevPage: currentLinkIndex > 0 ? flattenedNavGroups[currentLinkIndex - 1] : null,
-      nextPage: currentLinkIndex < flattenedNavGroups.length - 1 ? flattenedNavGroups[currentLinkIndex + 1] : null,
+      prevPage: currentLinkIndex > 0 ? flattenedSidebarGroups[currentLinkIndex - 1] : null,
+      nextPage:
+        currentLinkIndex < flattenedSidebarGroups.length - 1 ? flattenedSidebarGroups[currentLinkIndex + 1] : null,
     };
-  }, [isGroupPage, navGroups, flattenedNavGroups, pathname]);
+  }, [isGroupPage, sidebarGroups, flattenedSidebarGroups, pathname]);
 
   return (
     <>

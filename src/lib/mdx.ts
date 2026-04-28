@@ -102,10 +102,10 @@ export const getGroupMeta = async (
 };
 
 // Get navigation groups for sidebar (order derived from navigation.json)
-export const getNavGroups = async (locale: string): Promise<SidebarGroup[]> => {
+export const getSidebarGroups = async (locale: string): Promise<SidebarGroup[]> => {
   const meta = await readRootMeta(locale);
 
-  const navGroups = await Promise.all(
+  const sidebarGroups = await Promise.all(
     meta.map(async (groupEntry) => {
       const pages = await Promise.all(
         groupEntry.pages.map(async ({ slug, title }) => {
@@ -124,7 +124,7 @@ export const getNavGroups = async (locale: string): Promise<SidebarGroup[]> => {
     }),
   );
 
-  return navGroups;
+  return sidebarGroups;
 };
 
 // Extract headings from MDX content for TOC

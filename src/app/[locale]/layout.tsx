@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@/contexts/theme-provider';
 import { SidebarInitializer } from '@/components/docs/sidebar-initializer';
-import { getNavGroups } from '@/lib/mdx';
+import { getSidebarGroups } from '@/lib/mdx';
 import { routing } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
@@ -24,12 +24,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   setRequestLocale(locale);
 
-  const navGroups = await getNavGroups(locale);
+  const sidebarGroups = await getSidebarGroups(locale);
 
   return (
     <NextIntlClientProvider locale={locale}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <SidebarInitializer navGroups={navGroups} />
+        <SidebarInitializer sidebarGroups={sidebarGroups} />
         {children}
       </ThemeProvider>
     </NextIntlClientProvider>

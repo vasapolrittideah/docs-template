@@ -14,7 +14,7 @@ interface DocsShellProps {
 }
 
 const DocsShell = ({ children }: DocsShellProps) => {
-  const navGroups = useSidebarStore((state) => state.groups);
+  const sidebarGroups = useSidebarStore((state) => state.sidebarGroups);
   const pathname = usePathname();
 
   const segments = pathname.split('/').filter(Boolean);
@@ -33,7 +33,7 @@ const DocsShell = ({ children }: DocsShellProps) => {
 
   return (
     <>
-      {navGroups.length > 0 && (
+      {sidebarGroups.length > 0 && (
         <div className="border-stroke-soft-200 bg-bg-white-0 sticky top-0 z-10 flex w-full max-w-361 justify-between gap-2 border-r border-b border-l p-2 lg:hidden">
           <SidebarDrawer />
           {showTOC && <TOCDropdown />}
@@ -46,7 +46,7 @@ const DocsShell = ({ children }: DocsShellProps) => {
           <TOC className="xl:border-l-stroke-soft-200 sticky top-22 order-3 hidden h-[calc(100vh-88px)] overflow-y-auto lg:w-64 xl:block xl:border-l" />
         )}
         <div className="min-w-0 flex-1">
-          {navGroups.length > 0 && showTOC && (
+          {sidebarGroups.length > 0 && showTOC && (
             <div className="border-stroke-soft-200 bg-bg-white-0 sticky top-22 z-10 hidden gap-2 border-b p-2 lg:flex xl:hidden">
               <TOCDropdown />
             </div>
