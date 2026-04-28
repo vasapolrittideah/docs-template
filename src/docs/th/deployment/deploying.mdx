@@ -1,0 +1,73 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'การ Deploy | docs-template',
+  description: 'วิธี build และ deploy docs-template ไปยัง Vercel, Netlify, หรือ Node.js server แบบ self-hosted',
+}
+
+# การ Deploy
+
+docs-template เป็น Next.js application มาตรฐาน และสามารถ deploy ได้บนทุกแพลตฟอร์มที่รองรับ Next.js
+
+---
+
+## Script ก่อน Build
+
+มีสอง script ที่ควรพิจารณาก่อน deploy สู่ production
+
+### Search index
+
+Search index จะถูกสร้างโดยอัตโนมัติจาก `bun build` ดังนั้นไม่จำเป็นต้องรัน step เพิ่มเติมสำหรับการ deploy ส่วนใหญ่
+
+### Git metadata
+
+หากต้องการแสดงวันที่แก้ไขล่าสุดและข้อมูลผู้แก้ไขที่ถูกต้องในแต่ละหน้า ให้รัน Git metadata script **ก่อน** build:
+
+```bash copy="true"
+bun run generate-git-metadata && bun run build
+```
+
+<Callout type="info">
+การผสานกับ lint-staged
+
+`generate-git-metadata` ยังรันอัตโนมัติผ่าน lint-staged ทุกครั้งที่ commit ช่วยให้ metadata ถูกอัปเดตอยู่เสมอขณะทำงาน
+</Callout>
+
+---
+
+## แพลตฟอร์ม Deploy
+
+### Vercel
+
+Import repository บน [vercel.com](https://vercel.com) และ deploy โดยไม่ต้องตั้งค่าเพิ่มเติม Vercel จะตรวจจับ Next.js โดยอัตโนมัติและตั้ง build command ที่ถูกต้องให้
+
+หากต้องการรวม Git metadata ให้ตั้ง build command ในแดชบอร์ด Vercel:
+
+```bash copy="true"
+bun run generate-git-metadata && bun run build
+```
+
+### Netlify
+
+ใช้ [Next.js บน Netlify](https://docs.netlify.com/frameworks/next-js/overview/) build plugin ตั้ง build command เป็น:
+
+```bash copy="true"
+bun run generate-git-metadata && bun run build
+```
+
+### Self-hosted
+
+รัน production build บน server Node.js 20+ ใด ๆ:
+
+```bash copy="true"
+bun run generate-git-metadata && bun run build
+bun start
+```
+
+Server จะเริ่มต้นที่พอร์ต 4000 โดยค่าเริ่มต้น
+
+<Callout type="tip">
+Environment variables
+
+หากแพลตฟอร์ม deploy ของคุณ clone Git history แบบ shallow script `generate-git-metadata` อาจไม่มีสิทธิ์เข้าถึงประวัติ commit ทั้งหมด ให้ใช้ `git fetch --unshallow` ใน CI pipeline เพื่อให้ได้ metadata ที่ถูกต้อง
+</Callout>

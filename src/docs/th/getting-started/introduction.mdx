@@ -1,0 +1,73 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'บทนำ | docs-template',
+  description: 'ภาพรวมของ docs-template เทมเพลตสำหรับสร้างเว็บไซต์เอกสาร ด้วย Next.js, MDX, และ Tailwind CSS พร้อม i18n, ค้นหา, และฟีเจอร์อื่น ๆ ครบในตัว',
+}
+
+# บทนำ
+
+**docs-template** คือเทมเพลตสำหรับสร้างเว็บไซต์เอกสาร ที่สร้างด้วย Next.js, MDX, และ Tailwind CSS เพียงเขียนเนื้อหาในไฟล์ MDX และกำหนดโครงสร้างการนำทางด้วยไฟล์ JSON ไฟล์เดียว คุณก็จะได้เว็บไซต์เอกสารที่พร้อมใช้งานทันที
+
+---
+
+## ฟีเจอร์
+
+- **เนื้อหาแบบ MDX** — เขียนเอกสารด้วย Markdown พร้อมรองรับ JSX component
+- **รองรับหลายภาษา (i18n)** — รองรับหลาย locale ด้วย [next-intl](https://next-intl.dev/) พร้อมเนื้อหาและการนำทางแยกตาม locale
+- **Routing แบบ file-based** — หน้าเพจแมปตรงกับ `src/docs/[locale]/[group]/[slug].mdx`
+- **Navigation แบบ JSON** — กำหนดโครงสร้าง sidebar ทั้งหมดในไฟล์ `src/docs/[locale]/navigation.json`
+- **Syntax highlighting** — ขับเคลื่อนด้วย [Shiki](https://shiki.style/) พร้อมปุ่มคัดลอก
+- **ค้นหาแบบ full-text** — ค้นหา fuzzy ฝั่ง client ด้วย [Fuse.js](https://www.fusejs.io/)
+- **สารบัญอัตโนมัติ** — สร้างจาก heading ในแต่ละหน้า MDX โดยอัตโนมัติ
+- **Dark / Light mode** — สลับธีมพร้อมรองรับการตั้งค่าของระบบ
+- **ข้อมูล Git** — วันที่แก้ไขล่าสุดและผู้แก้ไขดึงมาจากประวัติ Git
+- **Responsive layout** — Sidebar drawer สำหรับมือถือ และ sidebar แบบ sticky สำหรับเดสก์ท็อป
+
+---
+
+## เทคโนโลยีที่ใช้
+
+| ด้าน | ไลบรารี |
+|---|---|
+| Framework | [Next.js 16](https://nextjs.org) (App Router) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| MDX | [@next/mdx](https://nextjs.org/docs/app/building-your-application/configuring/mdx) |
+| i18n | [next-intl](https://next-intl.dev/) |
+| Syntax highlighting | [Shiki](https://shiki.style/) |
+| ค้นหา | [Fuse.js](https://www.fusejs.io/) |
+| Animation | [Framer Motion](https://www.framer.com/motion/) |
+| Icons | [Remixicon](https://remixicon.com/) |
+| State management | [Zustand](https://zustand-demo.pmnd.rs/) |
+| Components | [Radix UI](https://www.radix-ui.com/) |
+
+---
+
+## โครงสร้างโปรเจกต์
+
+ไดเรกทอรีหลักที่คุณจะใช้งาน:
+
+```text
+src/
+├── docs/
+│   ├── en/
+│   │   ├── navigation.json     # การนำทาง sidebar ภาษาอังกฤษ
+│   │   └── [group]/[slug].mdx  # เนื้อหา MDX ภาษาอังกฤษ
+│   └── th/
+│       ├── navigation.json     # การนำทาง sidebar ภาษาไทย
+│       └── [group]/[slug].mdx  # เนื้อหา MDX ภาษาไทย
+├── components/
+│   └── mdx/                    # MDX component overrides
+├── i18n/
+│   ├── routing.ts              # รายการ locale และ locale เริ่มต้น
+│   └── request.ts              # การตั้งค่า next-intl ฝั่ง server
+└── messages/
+    ├── en.json                 # ข้อความ UI ภาษาอังกฤษ
+    └── th.json                 # ข้อความ UI ภาษาไทย
+```
+
+<Callout type="info">
+พร้อมเริ่มต้นแล้ว?
+
+ไปที่หน้า [การติดตั้ง](/th/docs/getting-started/installation) เพื่อ clone repository และเริ่มต้น development server
+</Callout>

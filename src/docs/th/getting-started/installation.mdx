@@ -1,0 +1,71 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'การติดตั้ง | docs-template',
+  description: 'วิธี clone docs-template ติดตั้ง dependencies และเริ่มต้น development server',
+}
+
+# การติดตั้ง
+
+หน้านี้จะแนะนำขั้นตอนตั้งแต่การ clone repository ไปจนถึงการเริ่มต้น development server ครั้งแรก
+
+---
+
+## ข้อกำหนดเบื้องต้น
+
+ก่อนเริ่มต้น ตรวจสอบให้แน่ใจว่าได้ติดตั้งสิ่งต่อไปนี้แล้ว:
+
+- [Node.js](https://nodejs.org/) เวอร์ชัน 20 ขึ้นไป
+- [Bun](https://bun.sh/) (แนะนำ) — โปรเจกต์นี้ใช้ Bun เป็น package manager
+
+---
+
+## ขั้นตอน
+
+### 1. Clone repository
+
+```bash copy="true"
+git clone https://github.com/your-username/docs-template.git
+cd docs-template
+```
+
+หรือคลิก **"Use this template"** บนหน้า GitHub repository เพื่อสร้าง repository ใหม่จากเทมเพลตนี้โดยไม่มีประวัติ commit
+
+### 2. ติดตั้ง dependencies
+
+```bash copy="true"
+bun install
+```
+
+### 3. เริ่มต้น development server
+
+```bash copy="true"
+bun dev
+```
+
+เปิด [http://localhost:4000](http://localhost:4000) ในเบราว์เซอร์ development server จะสร้าง search index โดยอัตโนมัติก่อนเริ่มต้น
+
+<Callout type="info">
+การสร้าง search index
+
+คำสั่ง `bun dev` จะรัน `generate-search-index` โดยอัตโนมัติก่อนเริ่ม server ไม่จำเป็นต้องรันด้วยตนเองในระหว่างพัฒนา
+</Callout>
+
+---
+
+## Script ที่ใช้ได้
+
+| Script | คำอธิบาย |
+|---|---|
+| `bun dev` | สร้าง search index แล้วเริ่ม development server ที่พอร์ต 4000 |
+| `bun build` | สร้าง search index แล้ว build สำหรับ production |
+| `bun start` | เริ่ม production server ที่พอร์ต 4000 |
+| `bun lint` | รัน ESLint |
+| `bun run generate-search-index` | สร้าง full-text search index จากเนื้อหา MDX |
+| `bun run generate-git-metadata` | สร้าง Git last-modified metadata ล่วงหน้าสำหรับทุกหน้า |
+
+<Callout type="tip">
+Git metadata
+
+รัน `bun run generate-git-metadata` ก่อน production build เพื่อแสดงวันที่แก้ไขล่าสุดและข้อมูลผู้แก้ไขที่ถูกต้องในแต่ละหน้า
+</Callout>

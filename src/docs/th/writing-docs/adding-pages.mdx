@@ -1,0 +1,100 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'การเพิ่มหน้า | docs-template',
+  description: 'วิธีสร้างหน้า MDX และกลุ่มการนำทางใหม่ใน docs-template',
+}
+
+# การเพิ่มหน้า
+
+หน้าเอกสารใน docs-template คือไฟล์ MDX ที่เก็บไว้ใน `src/docs/[locale]/[group]/[slug].mdx` การเพิ่มหน้าใหม่มีสองขั้นตอน: สร้างไฟล์ MDX และลงทะเบียนในไฟล์ navigation
+
+---
+
+## ตำแหน่งไฟล์
+
+ไฟล์ MDX ทั้งหมดใช้รูปแบบ path นี้:
+
+```text
+src/docs/<locale>/<group>/<slug>.mdx
+```
+
+- `<locale>` — `en` หรือ `th` (หรือ locale อื่น ๆ ที่คุณตั้งค่าไว้)
+- `<group>` — โฟลเดอร์ที่แมปกับกลุ่มการนำทางใน sidebar
+- `<slug>` — ตัวระบุหน้าที่ใช้ใน URL
+
+ไฟล์ที่ `src/docs/en/guides/configuration.mdx` จะถูก serve ที่ `/en/docs/guides/configuration`
+
+---
+
+## การสร้างหน้า
+
+### 1. สร้างไฟล์ MDX
+
+สร้างไฟล์ที่ `src/docs/[locale]/[group]/[slug].mdx` ทุกหน้าต้องเริ่มต้นด้วย metadata export:
+
+```mdx:src/docs/th/guides/configuration.mdx copy="true"
+export const metadata = {
+  title: 'การตั้งค่า | เอกสารของฉัน',
+  description: 'วิธีตั้งค่าโปรเจกต์',
+}
+
+# การตั้งค่า
+
+เนื้อหาของคุณอยู่ที่นี่
+```
+
+<Callout type="info">
+สร้างให้ครบทุก locale
+
+สร้างไฟล์ MDX สำหรับ**ทุก locale** ที่คุณรองรับ (เช่น ทั้ง `en` และ `th`) เพื่อหลีกเลี่ยงข้อผิดพลาด 404 เมื่อผู้ใช้สลับภาษา
+</Callout>
+
+### 2. ลงทะเบียนใน navigation
+
+เปิด `src/docs/[locale]/navigation.json` สำหรับแต่ละ locale และเพิ่ม entry `{ "slug", "title" }` ในอาร์เรย์ `pages` ของกลุ่มที่เกี่ยวข้อง:
+
+```json:src/docs/th/navigation.json copy="true"
+[
+  {
+    "slug": "guides",
+    "title": "คู่มือ",
+    "pages": [
+      { "slug": "configuration", "title": "การตั้งค่า" }
+    ]
+  }
+]
+```
+
+หน้าจะปรากฏใน sidebar ทันที
+
+---
+
+## การเพิ่มกลุ่มใหม่
+
+หากไม่มีกลุ่มที่เหมาะสมสำหรับหน้าของคุณ ให้เพิ่ม object กลุ่มใหม่ในอาร์เรย์ระดับบนสุดของไฟล์ navigation ทั้งสอง locale:
+
+```json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "เริ่มต้นใช้งาน",
+    "pages": [
+      { "slug": "introduction", "title": "บทนำ" }
+    ]
+  },
+  {
+    "slug": "guides",
+    "title": "คู่มือ",
+    "pages": [
+      { "slug": "configuration", "title": "การตั้งค่า" }
+    ]
+  }
+]
+```
+
+<Callout type="warning">
+หลีกเลี่ยง slug ซ้ำ
+
+slug ของหน้าต้องไม่ซ้ำกันภายในกลุ่มเดียวกัน หน้าที่มี slug เหมือนกันในกลุ่มเดียวกันจะทำให้เกิดความขัดแย้งใน routing
+</Callout>

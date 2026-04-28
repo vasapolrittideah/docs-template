@@ -1,0 +1,67 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'Site Settings | docs-template',
+  description: 'How to update the site title, description, logo, and theme colors in docs-template.',
+}
+
+# Site Settings
+
+This page covers the key files to edit when branding docs-template as your own: the site metadata, logo, and theme color tokens.
+
+---
+
+## Site Metadata
+
+Edit `src/app/layout.tsx` to update the page title, description, and other Open Graph metadata:
+
+```tsx:src/app/layout.tsx copy="true"
+export const metadata: Metadata = {
+  title: {
+    default: 'My Docs',
+    template: '%s | My Docs',
+  },
+  description: 'Documentation for My Project.',
+}
+```
+
+---
+
+## Logo
+
+The logo rendered in the sidebar header is defined in `src/components/docs/docs-logo.tsx`. Replace the contents of that component with your own logo — an image, SVG, or text:
+
+```tsx:src/components/docs/docs-logo.tsx copy="true"
+export default function DocsLogo() {
+  return (
+    <img src="/logo.svg" alt="My Project" className="h-6" />
+  )
+}
+```
+
+Place static assets (images, fonts) in the `public/` directory so they are served at the root path.
+
+---
+
+## Theme Colors
+
+docs-template uses Tailwind CSS v4 with CSS custom properties for design tokens. Update the tokens in `src/styles/globals.css` to change colors across the entire site:
+
+```css:src/styles/globals.css copy="true"
+:root {
+  --color-primary: oklch(0.6 0.2 250);
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.15 0 0);
+}
+
+.dark {
+  --color-background: oklch(0.12 0 0);
+  --color-foreground: oklch(0.95 0 0);
+}
+```
+
+<Callout type="tip">
+Color format
+
+Tailwind CSS v4 works best with `oklch()` color values, which provide perceptually uniform color manipulation. Tools like [oklch.com](https://oklch.com) can help you pick values.
+</Callout>

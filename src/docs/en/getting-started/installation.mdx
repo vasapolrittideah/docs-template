@@ -1,0 +1,71 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'Installation | docs-template',
+  description: 'How to clone docs-template, install dependencies, and start the development server.',
+}
+
+# Installation
+
+This page walks you through cloning the repository, installing dependencies, and starting the development server for the first time.
+
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) 20 or higher
+- [Bun](https://bun.sh/) (recommended) — the project uses Bun as the package manager
+
+---
+
+## Steps
+
+### 1. Clone the repository
+
+```bash copy="true"
+git clone https://github.com/your-username/docs-template.git
+cd docs-template
+```
+
+Alternatively, click **"Use this template"** on the GitHub repository page to create a new repository from this template without the commit history.
+
+### 2. Install dependencies
+
+```bash copy="true"
+bun install
+```
+
+### 3. Start the development server
+
+```bash copy="true"
+bun dev
+```
+
+Open [http://localhost:4000](http://localhost:4000) in your browser. The development server automatically generates the search index before starting.
+
+<Callout type="info">
+Search index generation
+
+The `bun dev` command runs `generate-search-index` automatically before starting the server. You do not need to run it manually during development.
+</Callout>
+
+---
+
+## Available Scripts
+
+| Script | Description |
+|---|---|
+| `bun dev` | Generate search index, then start development server on port 4000 |
+| `bun build` | Generate search index, then build for production |
+| `bun start` | Start production server on port 4000 |
+| `bun lint` | Run ESLint |
+| `bun run generate-search-index` | Build the full-text search index from MDX content |
+| `bun run generate-git-metadata` | Pre-generate Git last-modified metadata for all doc pages |
+
+<Callout type="tip">
+Git metadata
+
+Run `bun run generate-git-metadata` before your production build to display accurate last-modified dates and author information on each page.
+</Callout>

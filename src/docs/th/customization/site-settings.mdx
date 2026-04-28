@@ -1,0 +1,67 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'ตั้งค่าเว็บไซต์ | docs-template',
+  description: 'วิธีอัปเดต title, description, โลโก้, และสีธีมของเว็บไซต์ใน docs-template',
+}
+
+# ตั้งค่าเว็บไซต์
+
+หน้านี้ครอบคลุมไฟล์หลักที่ต้องแก้ไขเมื่อต้องการปรับแต่ง docs-template ให้เป็นแบรนด์ของคุณ ได้แก่ metadata ของเว็บไซต์ โลโก้ และ color token ของธีม
+
+---
+
+## Metadata ของเว็บไซต์
+
+แก้ไข `src/app/layout.tsx` เพื่ออัปเดต title, description, และ Open Graph metadata อื่น ๆ:
+
+```tsx:src/app/layout.tsx copy="true"
+export const metadata: Metadata = {
+  title: {
+    default: 'เอกสารของฉัน',
+    template: '%s | เอกสารของฉัน',
+  },
+  description: 'เอกสารสำหรับโปรเจกต์ของฉัน',
+}
+```
+
+---
+
+## โลโก้
+
+โลโก้ที่แสดงใน header ของ sidebar กำหนดไว้ใน `src/components/docs/docs-logo.tsx` แทนที่เนื้อหาของ component ด้วยโลโก้ของคุณ — รูปภาพ, SVG, หรือข้อความ:
+
+```tsx:src/components/docs/docs-logo.tsx copy="true"
+export default function DocsLogo() {
+  return (
+    <img src="/logo.svg" alt="โปรเจกต์ของฉัน" className="h-6" />
+  )
+}
+```
+
+วาง static asset (รูปภาพ, ฟอนต์) ไว้ในไดเรกทอรี `public/` เพื่อให้เข้าถึงได้จาก root path
+
+---
+
+## สีธีม
+
+docs-template ใช้ Tailwind CSS v4 พร้อม CSS custom properties สำหรับ design token อัปเดต token ใน `src/styles/globals.css` เพื่อเปลี่ยนสีทั่วทั้งเว็บไซต์:
+
+```css:src/styles/globals.css copy="true"
+:root {
+  --color-primary: oklch(0.6 0.2 250);
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.15 0 0);
+}
+
+.dark {
+  --color-background: oklch(0.12 0 0);
+  --color-foreground: oklch(0.95 0 0);
+}
+```
+
+<Callout type="tip">
+รูปแบบสี
+
+Tailwind CSS v4 ทำงานได้ดีที่สุดกับค่าสี `oklch()` ซึ่งให้การจัดการสีที่สม่ำเสมอตามการรับรู้ของมนุษย์ เครื่องมืออย่าง [oklch.com](https://oklch.com) สามารถช่วยให้คุณเลือกค่าได้
+</Callout>

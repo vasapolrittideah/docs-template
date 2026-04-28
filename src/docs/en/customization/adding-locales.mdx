@@ -1,0 +1,66 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'Adding Locales | docs-template',
+  description: 'How to add a new language locale to docs-template.',
+}
+
+# Adding Locales
+
+docs-template ships with English (`en`) and Thai (`th`). This page explains how to add a new locale to the site.
+
+---
+
+## Steps
+
+### 1. Register the locale in routing config
+
+Add the new locale identifier to the `locales` array in `src/i18n/routing.ts`. Optionally update `defaultLocale`:
+
+```ts:src/i18n/routing.ts copy="true"
+import { defineRouting } from 'next-intl/routing';
+
+export const routing = defineRouting({
+  locales: ['en', 'th', 'ja'],
+  defaultLocale: 'en',
+});
+```
+
+### 2. Create a messages file
+
+Create `messages/[locale].json` and add translated values for every UI string key that exists in `messages/en.json`:
+
+```bash copy="true"
+cp messages/en.json messages/ja.json
+```
+
+Then replace the values in `messages/ja.json` with the translated strings.
+
+<Callout type="warning">
+All keys required
+
+Every key present in the English messages file must also exist in the new locale's file. Missing keys will cause runtime errors when users switch to that locale.
+</Callout>
+
+### 3. Create the docs folder and navigation
+
+Create a navigation file and your MDX content for the new locale:
+
+```bash copy="true"
+mkdir -p src/docs/ja
+cp src/docs/en/navigation.json src/docs/ja/navigation.json
+```
+
+Translate the `title` values in `src/docs/ja/navigation.json`, then create the corresponding MDX files under `src/docs/ja/[group]/[slug].mdx`.
+
+<Callout type="tip">
+Slugs stay the same
+
+Keep the `slug` values identical across all locale navigation files. Only translate the `title` values and MDX content.
+</Callout>
+
+---
+
+## Result
+
+After completing these steps, the new locale will be available at `/ja/docs/...` and will appear in the locale switcher automatically.

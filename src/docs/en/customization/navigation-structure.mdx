@@ -1,0 +1,73 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'Navigation Structure | docs-template',
+  description: 'How the sidebar navigation is structured and how to reorder or reorganize it in docs-template.',
+}
+
+# Navigation Structure
+
+The sidebar is entirely driven by a JSON file — no code changes needed. This page explains the structure and how to reorder items.
+
+---
+
+## How It Works
+
+Each locale has its own navigation file:
+
+- `src/docs/en/navigation.json`
+- `src/docs/th/navigation.json`
+
+The sidebar renders groups and pages in the exact order they appear in the file.
+
+---
+
+## File Structure
+
+```json:src/docs/en/navigation.json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "Getting Started",
+    "pages": [
+      { "slug": "introduction", "title": "Introduction" },
+      { "slug": "installation", "title": "Installation" }
+    ]
+  },
+  {
+    "slug": "guides",
+    "title": "Guides",
+    "pages": [
+      { "slug": "configuration", "title": "Configuration" }
+    ]
+  }
+]
+```
+
+- **Top-level array** — ordered list of sidebar groups.
+- Each group has a `slug`, a `title`, and a `pages` array.
+- Each page entry has a `slug` (matches the MDX filename without `.mdx`) and a `title` (displayed in the sidebar).
+
+---
+
+## Reordering Items
+
+To change the order pages appear in a group, reorder the entries in the `pages` array. To change the order groups appear in the sidebar, reorder the top-level objects. No other changes are required.
+
+<Callout type="warning">
+Keep both locale files in sync
+
+The `en` and `th` navigation files must contain the same `slug` values. The sidebar structure should be identical across locales — only the `title` values should differ.
+</Callout>
+
+---
+
+## URL Pattern
+
+Every page is served at:
+
+```text
+/[locale]/docs/[group]/[slug]
+```
+
+For example, `{ "slug": "configuration" }` inside the `"guides"` group is available at `/en/docs/guides/configuration`.

@@ -1,0 +1,73 @@
+import Callout from '@/components/mdx/callout';
+
+export const metadata = {
+  title: 'โครงสร้างการนำทาง | docs-template',
+  description: 'วิธีจัดโครงสร้างและจัดเรียง sidebar navigation ใหม่ใน docs-template',
+}
+
+# โครงสร้างการนำทาง
+
+Sidebar ขับเคลื่อนด้วยไฟล์ JSON ทั้งหมด — ไม่ต้องแก้ไข code เลย หน้านี้อธิบายโครงสร้างและวิธีจัดเรียงรายการใหม่
+
+---
+
+## วิธีการทำงาน
+
+แต่ละ locale มีไฟล์ navigation ของตัวเอง:
+
+- `src/docs/en/navigation.json`
+- `src/docs/th/navigation.json`
+
+Sidebar จะแสดงกลุ่มและหน้าตามลำดับที่ปรากฏในไฟล์
+
+---
+
+## โครงสร้างไฟล์
+
+```json:src/docs/th/navigation.json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "เริ่มต้นใช้งาน",
+    "pages": [
+      { "slug": "introduction", "title": "บทนำ" },
+      { "slug": "installation", "title": "การติดตั้ง" }
+    ]
+  },
+  {
+    "slug": "guides",
+    "title": "คู่มือ",
+    "pages": [
+      { "slug": "configuration", "title": "การตั้งค่า" }
+    ]
+  }
+]
+```
+
+- **อาร์เรย์ระดับบนสุด** — รายการกลุ่ม sidebar ที่เรียงลำดับ
+- แต่ละกลุ่มมี `slug`, `title`, และอาร์เรย์ `pages`
+- แต่ละ entry ของหน้ามี `slug` (ตรงกับชื่อไฟล์ MDX โดยไม่มี `.mdx`) และ `title` (แสดงใน sidebar)
+
+---
+
+## การจัดเรียงรายการใหม่
+
+หากต้องการเปลี่ยนลำดับที่หน้าปรากฏในกลุ่ม ให้จัดเรียง entry ใหม่ในอาร์เรย์ `pages` หากต้องการเปลี่ยนลำดับที่กลุ่มปรากฏใน sidebar ให้จัดเรียง object ระดับบนสุดใหม่ ไม่จำเป็นต้องเปลี่ยนแปลงอะไรเพิ่มเติม
+
+<Callout type="warning">
+รักษาไฟล์ทุก locale ให้ตรงกัน
+
+ไฟล์ navigation ของ `en` และ `th` ต้องมีค่า `slug` เหมือนกัน โครงสร้าง sidebar ควรเหมือนกันในทุก locale — เปลี่ยนได้เฉพาะค่า `title` เท่านั้น
+</Callout>
+
+---
+
+## รูปแบบ URL
+
+ทุกหน้าจะถูก serve ที่:
+
+```text
+/[locale]/docs/[group]/[slug]
+```
+
+ตัวอย่างเช่น `{ "slug": "configuration" }` ในกลุ่ม `"guides"` จะเข้าถึงได้ที่ `/th/docs/guides/configuration`
