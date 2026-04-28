@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, IBM_Plex_Sans_Thai, Reddit_Sans } from 'next/font/google';
 import '@/styles/globals.css';
-import { ThemeProvider } from '@/contexts/theme-provider';
-import { SidebarInitializer } from '@/components/docs/sidebar-initializer';
-import { getNavGroups } from '@/lib/mdx';
 
 const ibmPlexSansThai = IBM_Plex_Sans_Thai({
   variable: '--font-ibm-plex-sans-thai',
@@ -31,23 +28,16 @@ export const metadata: Metadata = {
   description: '',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const navGroups = await getNavGroups();
-
   return (
-    <html suppressHydrationWarning lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body
-        suppressHydrationWarning
-        className={`${ibmPlexSansThai.variable} ${redditSans.variable} ${geistMono.variable}`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <SidebarInitializer navGroups={navGroups} />
-          {children}
-        </ThemeProvider>
-      </body>
+    <html
+      suppressHydrationWarning
+      className={`${ibmPlexSansThai.variable} ${redditSans.variable} ${geistSans.variable} ${geistMono.variable}`}>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

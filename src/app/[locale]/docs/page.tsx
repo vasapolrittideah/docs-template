@@ -1,6 +1,13 @@
-import { TOCInitializer } from '@/components/docs/toc-initializer';
+import { setRequestLocale } from 'next-intl/server';
 
-const RootPage = async () => {
+interface DocsPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+const RootPage = async ({ params }: DocsPageProps) => {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <div className="border-l-stroke-soft-200 border-r-stroke-soft-200 flex w-full max-w-361 grow flex-col border-r border-l px-6">
       <div className="flex grow flex-col items-center justify-center text-center">
@@ -8,8 +15,6 @@ const RootPage = async () => {
           <p>This is the root page of the documentation. Customize it to fit your needs.</p>
         </div>
       </div>
-
-      <TOCInitializer headings={[]} />
     </div>
   );
 };

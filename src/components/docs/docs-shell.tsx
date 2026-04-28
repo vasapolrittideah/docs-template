@@ -17,8 +17,9 @@ const DocsShell = ({ children }: DocsShellProps) => {
   const navGroups = useSidebarStore((state) => state.groups);
   const pathname = usePathname();
 
-  const isRootPage = pathname === '/docs' || pathname === '/docs/';
-  const isGroupPage = !isRootPage && pathname.split('/').filter(Boolean).length === 2;
+  const segments = pathname.split('/').filter(Boolean);
+  const isRootPage = segments.at(-1) === 'docs' || segments.length === 0;
+  const isGroupPage = !isRootPage && segments.length === 2;
   const showSidebar = !isRootPage;
   const showTOC = !isRootPage && !isGroupPage;
 

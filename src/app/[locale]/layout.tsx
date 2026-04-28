@@ -1,0 +1,37 @@
+import { ThemeProvider } from '@/contexts/theme-provider';
+import { SidebarInitializer } from '@/components/docs/sidebar-initializer';
+import { getNavGroups } from '@/lib/mdx';
+import { routing } from '@/i18n/routing';
+import { setRequestLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { notFound } from 'next/navigation';
+
+interface LocaleLayoutProps {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale } = await params;
+
+  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
+    notFound();
+  }
+
+  setRequestLocale(locale);
+
+  const navGroups = await getNavGroups(locale);
+
+  return (
+    <NextIntlClientProvider locale={locale}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <SidebarInitializer navGroups={navGroups} />
+        {children}
+      </ThemeProvider>
+    </NextIntlClientProvider>
+  );
+}
