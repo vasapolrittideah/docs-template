@@ -22,10 +22,10 @@ argument-hint: 'URL to fetch, or describe the page topic, target group/slug, and
 All MDX pages live at:
 
 ```
-src/docs/<group>/<slug>.mdx
+src/docs/<locale>/<group>/<slug>.mdx
 ```
 
-Where `<group>` is a folder that maps to a navigation group (e.g., `project-fundamentals`).
+Where `<locale>` is `en` or `th`, and `<group>` is a folder that maps to a navigation group (e.g., `project-fundamentals`). Always create files for **both locales** unless the user specifies otherwise.
 
 ### Metadata
 
@@ -78,7 +78,9 @@ const x = 1;
 
 ### Navigation Registration
 
-Every new page must be added to `src/docs/navigation.json`.
+Every new page must be added to the navigation file for **each locale**:
+- `src/docs/en/navigation.json`
+- `src/docs/th/navigation.json`
 
 Structure:
 ```json
@@ -93,17 +95,18 @@ Structure:
 ]
 ```
 
-- To add a page to an **existing group**: append a `{ "slug", "title" }` entry to the group's `pages` array.
-- To add a **new group**: append a new group object to the top-level array.
+- To add a page to an **existing group**: append a `{ "slug", "title" }` entry to the group's `pages` array in both locale navigation files.
+- To add a **new group**: append a new group object to the top-level array in both locale navigation files.
+- Use translated titles in each locale's navigation file.
 
 ## Procedure
 
 ### A. From a description (default)
 
-1. **Clarify** the page topic, target group slug, page slug, and language (default: Thai, matching existing docs).
-2. **Read** `src/docs/navigation.json` to identify the correct group or decide if a new group is needed.
-3. **Create** the MDX file at `src/docs/<group>/<slug>.mdx` using the [template](./assets/template.mdx).
-4. **Register** the page in `src/docs/navigation.json` by adding `{ "slug": "<slug>", "title": "<title>" }` to the correct group's `pages` array.
+1. **Clarify** the page topic, target group slug, page slug, and which locales to generate (default: both `en` and `th`).
+2. **Read** `src/docs/en/navigation.json` and `src/docs/th/navigation.json` to identify the correct group or decide if a new group is needed.
+3. **Create** the MDX file for each locale at `src/docs/<locale>/<group>/<slug>.mdx` using the [template](./assets/template.mdx).
+4. **Register** the page in both `src/docs/en/navigation.json` and `src/docs/th/navigation.json` by adding `{ "slug": "<slug>", "title": "<title>" }` to the correct group's `pages` array (with translated titles).
 5. **Verify** there are no duplicate slugs within the same group.
 
 ### B. From a URL
@@ -119,8 +122,8 @@ Structure:
    - Code samples → fenced code blocks with the correct language tag and `copy="true"`
    - Warnings/notes/tips → `<Callout>` with appropriate `type`
 5. **Read** `src/docs/navigation.json` to identify the correct group.
-6. **Create** the MDX file at `src/docs/<group>/<slug>.mdx`.
-7. **Register** the page in `src/docs/navigation.json`.
+6. **Create** the MDX file for each locale at `src/docs/<locale>/<group>/<slug>.mdx`.
+7. **Register** the page in both `src/docs/en/navigation.json` and `src/docs/th/navigation.json`.
 8. **Verify** no duplicate slugs exist within the same group.
 
 ## Content Guidelines
@@ -130,4 +133,4 @@ Structure:
 - Use `##` for top-level sections, `###` for subsections.
 - Prefer `Callout type="info"` for setup notes, `type="tip"` for best practices, `type="warning"` / `type="danger"` for breaking or destructive actions.
 - Keep code examples minimal and runnable.
-- Match the language of surrounding docs (Thai by default for this project).
+- Create content in both `en` and `th` locales unless the user specifies otherwise. Match the language of each locale's surrounding docs.

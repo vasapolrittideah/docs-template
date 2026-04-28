@@ -1,16 +1,17 @@
 # docs-template
 
-A documentation site template built with Next.js, MDX, and Tailwind CSS. Write your docs in MDX files, configure navigation with a single JSON file, and get a fully-featured docs site with syntax highlighting, full-text search, table of contents, dark mode, and more — out of the box.
+A documentation site template built with Next.js, MDX, and Tailwind CSS. Write your docs in MDX files, configure navigation with a single JSON file, and get a fully-featured docs site with syntax highlighting, full-text search, table of contents, dark mode, internationalization, and more — out of the box.
 
 ## Features
 
 - **MDX-based content** — Write documentation in Markdown with JSX component support
-- **File-based routing** — Pages map directly to `src/docs/[group]/[slug].mdx`
-- **JSON-driven navigation** — Define sidebar structure in `src/docs/navigation.json`
+- **Internationalization (i18n)** — Multi-locale support powered by [next-intl](https://next-intl.dev/), with per-locale MDX content and navigation
+- **File-based routing** — Pages map directly to `src/docs/[locale]/[group]/[slug].mdx`
+- **JSON-driven navigation** — Define sidebar structure in `src/docs/[locale]/navigation.json`
 - **Syntax highlighting** — Powered by [Shiki](https://shiki.style/) with copy-to-clipboard support
 - **Full-text search** — Client-side fuzzy search using [Fuse.js](https://www.fusejs.io/)
 - **Table of contents** — Auto-generated from headings in each MDX page
-- **Dark / light mode** — Theme toggling with [next-themes](https://github.com/pacocoursey/next-themes)
+- **Dark / light mode** — Theme toggling with [@teispace/next-themes](https://github.com/teispace/next-themes)
 - **Git metadata** — Last modified date and author pulled from Git history
 - **Callouts** — Info, warning, and danger callout blocks via [rehype-callouts](https://github.com/lin-stephanie/rehype-callouts)
 - **Responsive layout** — Sidebar drawer for mobile, sticky sidebar for desktop
@@ -22,6 +23,7 @@ A documentation site template built with Next.js, MDX, and Tailwind CSS. Write y
 | Framework | [Next.js 16](https://nextjs.org) (App Router) |
 | Styling | [Tailwind CSS v4](https://tailwindcss.com) |
 | MDX | [@next/mdx](https://nextjs.org/docs/app/building-your-application/configuring/mdx), [@mdx-js/react](https://mdxjs.com) |
+| i18n | [next-intl](https://next-intl.dev/) |
 | Syntax highlighting | [Shiki](https://shiki.style/) |
 | Search | [Fuse.js](https://www.fusejs.io/) |
 | Animations | [Framer Motion](https://www.framer.com/motion/) |
@@ -65,21 +67,33 @@ Open [http://localhost:4000](http://localhost:4000) in your browser.
 src/
 ├── app/
 │   ├── layout.tsx              # Root layout
-│   └── docs/
-│       ├── layout.tsx          # Docs layout (header + sidebar + TOC)
-│       └── [group]/[slug]/
-│           └── page.tsx        # Dynamic doc page renderer
+│   └── [locale]/
+│       ├── layout.tsx          # Locale layout (NextIntlClientProvider, ThemeProvider)
+│       ├── page.tsx            # Redirects to /[locale]/docs
+│       └── docs/
+│           ├── layout.tsx      # Docs layout (header + sidebar + TOC)
+│           ├── page.tsx        # Docs root page
+│           └── [group]/[slug]/
+│               └── page.tsx    # Dynamic doc page renderer
 ├── components/
 │   ├── common/                 # Shared UI primitives
 │   ├── docs/                   # Docs-specific components
 │   ├── layout/                 # Header, sidebar, footer, TOC
 │   └── mdx/                    # MDX component overrides
 ├── docs/
-│   ├── navigation.json         # Sidebar navigation config
-│   └── [group]/
-│       └── [slug].mdx          # Documentation content files
+│   ├── en/
+│   │   ├── navigation.json     # English sidebar navigation config
+│   │   └── [group]/
+│   │       └── [slug].mdx      # English documentation content files
+│   └── th/
+│       ├── navigation.json     # Thai sidebar navigation config
+│       └── [group]/
+│           └── [slug].mdx      # Thai documentation content files
+├── i18n/
+│   ├── routing.ts              # Locale list and default locale
+│   └── request.ts              # Server-side next-intl config
 └── lib/
-    ├── mdx.ts                  # MDX file reading utilities
+    ├── mdx.ts                  # MDX file reading utilities (locale-aware)
     ├── git.ts                  # Git metadata helpers
     └── search.ts               # Search index builder
 ```
@@ -88,7 +102,7 @@ src/
 
 ### Adding a new page
 
-1. Create an MDX file under `src/docs/[group]/[slug].mdx`:
+1. Create an MDX file for each locale under `src/docs/[locale]/[group]/[slug].mdx`:
 
    ```mdx
    export const metadata = {
@@ -101,7 +115,7 @@ src/
    Content goes here.
    ```
 
-2. Register the page in `src/docs/navigation.json`:
+2. Register the page in the navigation file for each locale (`src/docs/en/navigation.json`, `src/docs/th/navigation.json`):
 
    ```json
    [
@@ -115,11 +129,11 @@ src/
    ]
    ```
 
-The page will be available at `/docs/my-group/my-page`.
+The page will be available at `/en/docs/my-group/my-page` and `/th/docs/my-group/my-page`.
 
 ### Adding a new group
 
-Add a new entry to the top-level array in `navigation.json`:
+Add a new entry to the top-level array in both `src/docs/en/navigation.json` and `src/docs/th/navigation.json`:
 
 ```json
 [
@@ -206,7 +220,21 @@ Tailwind CSS v4 uses CSS custom properties. Update the design tokens in `src/sty
 
 ### Navigation structure
 
-The sidebar order matches the order of entries in `src/docs/navigation.json`. Reorder entries there to change the sidebar order.
+The sidebar order matches the order of entries in each locale's `navigation.json`. Reorder entries in `src/docs/en/navigation.json` and `src/docs/th/navigation.json` to change the sidebar order.
+
+### Adding a new locale
+
+1. Add the locale to `src/i18n/routing.ts`:
+
+   ```ts
+   export const routing = defineRouting({
+     locales: ['en', 'th', 'ja'],
+     defaultLocale: 'th',
+   });
+   ```
+
+2. Create a message file at `messages/[locale].json` with all UI string keys.
+3. Create a docs folder at `src/docs/[locale]/` with a `navigation.json` and your MDX files.
 
 ## Pre-build Scripts
 
