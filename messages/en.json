@@ -31,6 +31,10 @@
   "DocsPage": {
     "placeholder": "This is the root page of the documentation. Customize it to fit your needs."
   },
+  "GroupPage": {
+    "pagesCount": "{count} pages in this group",
+    "notFound": "Group not found"
+  },
   "NotFound": {
     "title": "Page Not Found",
     "description": "Sorry! We couldn't find the page you were looking for.",
