@@ -132,7 +132,8 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
           if (selectedIndex >= 0 && selectedIndex < results.length) {
             e.preventDefault();
             const selectedResult = results[selectedIndex];
-            router.push(`/${locale}/docs/${selectedResult.item.slug}`);
+            const anchor = selectedResult.item.type === 'heading' ? `#${selectedResult.item.id}` : '';
+            router.push(`/${locale}/docs/${selectedResult.item.slug}${anchor}`);
             handleClose();
           }
           // Otherwise, let the form submit handle the search
@@ -231,7 +232,7 @@ const SearchModal = ({ searchInputRef, onClose, isOpen }: SearchModalProps) => {
                       resultRefs.current[index] = el;
                     }}
                     key={index}
-                    href={`/${locale}/docs/${result.item.slug}`}
+                    href={`/${locale}/docs/${result.item.slug}${result.item.type === 'heading' ? `#${result.item.id}` : ''}`}
                     onMouseEnter={() => setSelectedIndex(index)}
                     onClick={() => handleClose()}
                     className={twMerge(

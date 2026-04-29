@@ -24,7 +24,9 @@ const DocsShell = ({ children }: DocsShellProps) => {
   const showTOC = !isRootPage && !isGroupPage;
 
   useEffect(() => {
-    document.body.scrollTo(0, 0);
+    if (!window.location.hash) {
+      document.body.scrollTo(0, 0);
+    }
   }, [pathname]);
 
   if (!showSidebar) {
