@@ -1,5 +1,7 @@
 # docs-template
 
+> **This template is for internal use by [TCC Technology](https://www.tcc-technology.com/) only and is not intended for public or third-party use.**
+
 A documentation site template built with Next.js, MDX, and Tailwind CSS. Write your docs in MDX files, configure navigation with a single JSON file, and get a fully-featured docs site with syntax highlighting, full-text search, table of contents, dark mode, internationalization, and more — out of the box.
 
 ## Features
@@ -46,6 +48,8 @@ cd docs-template
 ```
 
 Or use it as a GitHub template by clicking **"Use this template"** on the repository page.
+
+> **Note:** This repository is maintained exclusively for TCC Technology internal projects.
 
 ### 2. Install dependencies
 
