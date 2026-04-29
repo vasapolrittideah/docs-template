@@ -45,23 +45,69 @@ Place static assets (images, fonts) in the `public/` directory so they are serve
 
 ## Theme Colors
 
-docs-template uses Tailwind CSS v4 with CSS custom properties for design tokens. Update the tokens in `src/styles/globals.css` to change colors across the entire site:
+docs-template uses Tailwind CSS v4 with CSS custom properties defined in `src/styles/globals.css`. All design tokens live inside an `@theme` block.
+
+### Gray Palette
+
+The base neutral scale runs from `--color-gray-950` (darkest) to `--color-gray-0` (white). Override any stop to shift the entire site's neutral tones:
 
 ```css:src/styles/globals.css copy="true"
-:root {
-  --color-primary: oklch(0.6 0.2 250);
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.15 0 0);
-}
-
-.dark {
-  --color-background: oklch(0.12 0 0);
-  --color-foreground: oklch(0.95 0 0);
+@theme {
+  --color-gray-950: #171717;
+  --color-gray-900: #1C1C1C;
+  /* … */
+  --color-gray-50:  #F7F7F7;
+  --color-gray-0:   #FFFFFF;
 }
 ```
 
-<Callout type="tip">
-Color format
+### Primary Colors
 
-Tailwind CSS v4 works best with `oklch()` color values, which provide perceptually uniform color manipulation. Tools like [oklch.com](https://oklch.com) can help you pick values.
+The primary color scale is mapped from the orange palette by default. Remap these five tokens to switch the accent color across the entire site:
+
+```css:src/styles/globals.css copy="true"
+@theme {
+  --color-primary-darker: var(--color-orange-800);
+  --color-primary-dark:   var(--color-orange-700);
+  --color-primary-base:   var(--color-orange-500);
+  --color-primary-light:  var(--color-orange-200);
+  --color-primary-lighter: var(--color-orange-50);
+}
+```
+
+### Adaptive Color Tokens
+
+Semantic tokens for background, text, and stroke each carry **both** a light-mode and a dark-mode value on a single line using the `var(--tw-light, …) var(--tw-dark, …)` syntax introduced in Tailwind CSS v4:
+
+```css:src/styles/globals.css copy="true"
+@theme {
+  /* Background */
+  --color-bg-strong-950:   var(--tw-light, var(--color-gray-950))  var(--tw-dark, var(--color-gray-0));
+  --color-bg-surface-800:  var(--tw-light, var(--color-gray-800))  var(--tw-dark, var(--color-gray-200));
+  --color-bg-sub-300:      var(--tw-light, var(--color-gray-300))  var(--tw-dark, var(--color-gray-600));
+  --color-bg-soft-200:     var(--tw-light, var(--color-gray-200))  var(--tw-dark, var(--color-gray-700));
+  --color-bg-weak-50:      var(--tw-light, var(--color-gray-50))   var(--tw-dark, var(--color-gray-900));
+  --color-bg-white-0:      var(--tw-light, var(--color-gray-0))    var(--tw-dark, var(--color-gray-950));
+
+  /* Text */
+  --color-text-strong-950: var(--tw-light, var(--color-gray-950))  var(--tw-dark, var(--color-gray-0));
+  --color-text-sub-600:    var(--tw-light, var(--color-gray-600))  var(--tw-dark, var(--color-gray-400));
+  --color-text-soft-400:   var(--tw-light, var(--color-gray-400))  var(--tw-dark, var(--color-gray-500));
+  --color-text-disabled-300: var(--tw-light, var(--color-gray-300)) var(--tw-dark, var(--color-gray-600));
+  --color-text-white-0:    var(--tw-light, var(--color-gray-0))    var(--tw-dark, var(--color-gray-950));
+
+  /* Stroke */
+  --color-stroke-strong-950: var(--tw-light, var(--color-gray-950)) var(--tw-dark, var(--color-gray-0));
+  --color-stroke-sub-300:    var(--tw-light, var(--color-gray-300)) var(--tw-dark, var(--color-gray-600));
+  --color-stroke-soft-200:   var(--tw-light, var(--color-gray-200)) var(--tw-dark, var(--color-gray-700));
+  --color-stroke-white-0:    var(--tw-light, var(--color-gray-0))   var(--tw-dark, var(--color-gray-950));
+}
+```
+
+The first value (`--tw-light`) is active in light mode; the second (`--tw-dark`) activates when the `.dark` class is present on a parent element.
+
+<Callout type="tip">
+How to change a semantic token
+
+Point the gray step to a different palette value. For example, to make the default background slightly warmer, replace `var(--color-gray-0)` with a custom hex token you've defined earlier in the same `@theme` block.
 </Callout>

@@ -45,23 +45,69 @@ export default function DocsLogo() {
 
 ## สีธีม
 
-docs-template ใช้ Tailwind CSS v4 พร้อม CSS custom properties สำหรับ design token อัปเดต token ใน `src/styles/globals.css` เพื่อเปลี่ยนสีทั่วทั้งเว็บไซต์:
+docs-template ใช้ Tailwind CSS v4 พร้อม CSS custom properties ที่กำหนดไว้ใน `src/styles/globals.css` โดย design token ทั้งหมดอยู่ภายใน block `@theme`
+
+### สเกลสีเทา
+
+สเกลสีกลางพื้นฐานไล่จาก `--color-gray-950` (เข้มสุด) ถึง `--color-gray-0` (ขาว) แก้ไขค่าใดค่าหนึ่งเพื่อเปลี่ยนโทนสีกลางทั่วทั้งเว็บไซต์:
 
 ```css:src/styles/globals.css copy="true"
-:root {
-  --color-primary: oklch(0.6 0.2 250);
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.15 0 0);
-}
-
-.dark {
-  --color-background: oklch(0.12 0 0);
-  --color-foreground: oklch(0.95 0 0);
+@theme {
+  --color-gray-950: #171717;
+  --color-gray-900: #1C1C1C;
+  /* … */
+  --color-gray-50:  #F7F7F7;
+  --color-gray-0:   #FFFFFF;
 }
 ```
 
-<Callout type="tip">
-รูปแบบสี
+### สีหลัก (Primary)
 
-Tailwind CSS v4 ทำงานได้ดีที่สุดกับค่าสี `oklch()` ซึ่งให้การจัดการสีที่สม่ำเสมอตามการรับรู้ของมนุษย์ เครื่องมืออย่าง [oklch.com](https://oklch.com) สามารถช่วยให้คุณเลือกค่าได้
+สเกลสีหลักถูก map จากชุดสีส้มโดยค่าเริ่มต้น เปลี่ยน 5 token นี้เพื่อสลับสี accent ทั่วทั้งเว็บไซต์:
+
+```css:src/styles/globals.css copy="true"
+@theme {
+  --color-primary-darker: var(--color-orange-800);
+  --color-primary-dark:   var(--color-orange-700);
+  --color-primary-base:   var(--color-orange-500);
+  --color-primary-light:  var(--color-orange-200);
+  --color-primary-lighter: var(--color-orange-50);
+}
+```
+
+### Adaptive Color Token
+
+token เชิงความหมายสำหรับ background, text, และ stroke แต่ละตัวมีค่าทั้ง light mode และ dark mode อยู่ในบรรทัดเดียว โดยใช้ syntax `var(--tw-light, …) var(--tw-dark, …)` ที่เพิ่มมาใน Tailwind CSS v4:
+
+```css:src/styles/globals.css copy="true"
+@theme {
+  /* Background */
+  --color-bg-strong-950:   var(--tw-light, var(--color-gray-950))  var(--tw-dark, var(--color-gray-0));
+  --color-bg-surface-800:  var(--tw-light, var(--color-gray-800))  var(--tw-dark, var(--color-gray-200));
+  --color-bg-sub-300:      var(--tw-light, var(--color-gray-300))  var(--tw-dark, var(--color-gray-600));
+  --color-bg-soft-200:     var(--tw-light, var(--color-gray-200))  var(--tw-dark, var(--color-gray-700));
+  --color-bg-weak-50:      var(--tw-light, var(--color-gray-50))   var(--tw-dark, var(--color-gray-900));
+  --color-bg-white-0:      var(--tw-light, var(--color-gray-0))    var(--tw-dark, var(--color-gray-950));
+
+  /* Text */
+  --color-text-strong-950: var(--tw-light, var(--color-gray-950))  var(--tw-dark, var(--color-gray-0));
+  --color-text-sub-600:    var(--tw-light, var(--color-gray-600))  var(--tw-dark, var(--color-gray-400));
+  --color-text-soft-400:   var(--tw-light, var(--color-gray-400))  var(--tw-dark, var(--color-gray-500));
+  --color-text-disabled-300: var(--tw-light, var(--color-gray-300)) var(--tw-dark, var(--color-gray-600));
+  --color-text-white-0:    var(--tw-light, var(--color-gray-0))    var(--tw-dark, var(--color-gray-950));
+
+  /* Stroke */
+  --color-stroke-strong-950: var(--tw-light, var(--color-gray-950)) var(--tw-dark, var(--color-gray-0));
+  --color-stroke-sub-300:    var(--tw-light, var(--color-gray-300)) var(--tw-dark, var(--color-gray-600));
+  --color-stroke-soft-200:   var(--tw-light, var(--color-gray-200)) var(--tw-dark, var(--color-gray-700));
+  --color-stroke-white-0:    var(--tw-light, var(--color-gray-0))   var(--tw-dark, var(--color-gray-950));
+}
+```
+
+ค่าแรก (`--tw-light`) ใช้งานใน light mode ส่วนค่าที่สอง (`--tw-dark`) จะทำงานเมื่อ class `.dark` อยู่บน element แม่
+
+<Callout type="tip">
+วิธีเปลี่ยน semantic token
+
+ชี้ gray step ไปที่ค่า palette อื่น เช่น หากต้องการให้พื้นหลังหลักอุ่นขึ้นเล็กน้อย ให้แทนที่ `var(--color-gray-0)` ด้วย hex token ที่กำหนดเองซึ่งประกาศไว้ก่อนหน้าในบล็อก `@theme` เดียวกัน
 </Callout>
