@@ -29,7 +29,9 @@
     "label": "On this page"
   },
   "DocsPage": {
-    "placeholder": "This is the root page of the documentation. Customize it to fit your needs."
+    "title": "Docs Template",
+    "description": "A ready-to-use docs starter. Fork it, write your content, and ship.",
+    "button": "Get Started"
   },
   "GroupPage": {
     "pagesCount": "{count} pages in this group",
