@@ -7,8 +7,10 @@ import InlineCode from './inline-code';
 import CodeBlock from './code-block';
 import * as Divider from '../common/divider';
 import Table from './table';
+import Callout from './callout';
 
 const components = {
+  Callout,
   h1: (props) => <Headings.H1 {...props} />,
   h2: (props) => <Headings.H2 {...props} />,
   h3: (props) => <Headings.H3 {...props} />,

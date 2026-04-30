@@ -40,13 +40,13 @@ export const metadata = {
 
 ### Available Components
 
-Import only what you use. All imports use a path relative to the MDX file.
+All components below are auto-mapped — **no import needed**.
 
-| Component | Import | Usage |
-|---|---|---|
-| `Callout` | `import Callout from '@/components/mdx/callout'` | Info/tip/warning/danger boxes |
+| Component | Usage |
+|---|---|
+| `Callout` | Info/tip/warning/danger boxes |
 
-All other elements (headings, paragraphs, lists, tables, inline code, code blocks, links, dividers `---`) are auto-mapped — **no import needed**.
+All other elements (headings, paragraphs, lists, tables, inline code, code blocks, links, dividers `---`) are also auto-mapped.
 
 ### Callout Usage
 
