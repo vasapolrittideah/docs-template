@@ -46,5 +46,19 @@
     "title": "Something went wrong",
     "description": "Sorry! We encountered an error.",
     "back": "Go back home"
+  },
+  "Auth": {
+    "signInWithMicrosoft": "Sign in with Microsoft",
+    "signInWithGoogle": "Sign in with Google",
+    "signOut": "Sign out"
+  },
+  "LoginPage": {
+    "title": "Sign In",
+    "description": "Please sign in with your company email.",
+    "divider": "Or for external users"
+  },
+  "UnauthorizedPage": {
+    "title": "Unauthorized",
+    "description": "Sorry! You don't have permission to access this documentation. Please use your company email or an authorized email to sign in. Contact an admin to request access."
   }
 }
