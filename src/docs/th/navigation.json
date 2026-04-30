@@ -4,29 +4,11 @@
     "title": "เริ่มต้นใช้งาน",
     "pages": [
       { "slug": "introduction", "title": "บทนำ" },
-      { "slug": "installation", "title": "การติดตั้ง" }
+      { "slug": "installation", "title": "การติดตั้ง" },
+      { "slug": "writing-docs", "title": "การเขียนเอกสาร" },
+      { "slug": "customization", "title": "การปรับแต่ง" },
+      { "slug": "authentication", "title": "Authentication" },
+      { "slug": "deployment", "title": "การ Deploy" }
     ]
-  },
-  {
-    "slug": "writing-docs",
-    "title": "การเขียนเอกสาร",
-    "pages": [
-      { "slug": "adding-pages", "title": "การเพิ่มหน้า" },
-      { "slug": "mdx-components", "title": "คอมโพเนนต์ MDX" }
-    ]
-  },
-  {
-    "slug": "customization",
-    "title": "การปรับแต่ง",
-    "pages": [
-      { "slug": "site-settings", "title": "ตั้งค่าเว็บไซต์" },
-      { "slug": "navigation-structure", "title": "โครงสร้างการนำทาง" },
-      { "slug": "adding-locales", "title": "การเพิ่มภาษา" }
-    ]
-  },
-  {
-    "slug": "deployment",
-    "title": "การ Deploy",
-    "pages": [{ "slug": "deploying", "title": "การ Deploy" }]
   }
 ]

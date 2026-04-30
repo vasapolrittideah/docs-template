@@ -1,0 +1,113 @@
+export const metadata = {
+    title: 'การปรับแต่ง | docs-template',
+    description: 'วิธีปรับแต่ง Site Metadata, โลโก้, สีธีม, โครงสร้างการนำทาง และ Locale ใน docs-template',
+}
+
+# การปรับแต่ง
+
+หน้านี้ครอบคลุมวิธีทั่วไปที่สุดในการปรับ docs-template ให้เข้ากับโปรเจกต์ของคุณ: Site Metadata, โลโก้, สีธีม, ลำดับการนำทาง และการเพิ่ม Locale ใหม่
+
+---
+
+## Site Metadata
+
+แก้ไข `src/app/layout.tsx` เพื่ออัปเดต `<title>` ส่วนกลาง, `<meta name="description">` และ Head Tag อื่นๆ ที่ใช้กับทุกหน้า:
+
+```tsx:src/app/layout.tsx copy="true"
+export const metadata: Metadata = {
+  title: 'เว็บไซต์เอกสารของฉัน',
+  description: 'เอกสารภายในสำหรับโปรเจกต์ของฉัน',
+}
+```
+
+---
+
+## โลโก้
+
+โลโก้ Header ของ Docs แสดงผลโดย `src/components/docs/docs-logo.tsx` แทนที่เนื้อหาของ Component นั้นด้วยรูปภาพหรือ SVG ของคุณเอง:
+
+```tsx:src/components/docs/docs-logo.tsx copy="true"
+export default function DocsLogo() {
+  return <img src="/logo.svg" alt="โปรเจกต์ของฉัน" className="h-6" />
+}
+```
+
+วางไฟล์โลโก้ของคุณในไดเรกทอรี `public/` เพื่อให้แสดงเป็น Static Asset
+
+---
+
+## สีธีม
+
+docs-template ใช้ Tailwind CSS v4 ซึ่งใช้ CSS Custom Properties สำหรับ Design Token อัปเดต Variables ใน `src/styles/globals.css` เพื่อเปลี่ยนสีหลัก, พื้นหลัง และ Foreground Token สำหรับทั้งโหมดสว่างและมืด:
+
+```css:src/styles/globals.css copy="true"
+:root {
+  --color-primary: oklch(55% 0.2 250);
+  --color-background: oklch(99% 0 0);
+  --color-foreground: oklch(15% 0 0);
+}
+
+.dark {
+  --color-background: oklch(12% 0 0);
+  --color-foreground: oklch(95% 0 0);
+}
+```
+
+<Callout type="tip">
+การใช้ oklch
+
+Tailwind CSS v4 แนะนำ `oklch` สำหรับสีที่สม่ำเสมอตามการรับรู้ ปรับค่า Lightness, Chroma และ Hue เพื่อให้ตรงกับแบรนด์ของคุณ
+</Callout>
+
+---
+
+## โครงสร้างการนำทาง
+
+ลำดับ Sidebar ตรงกับลำดับ Entry ในแต่ละ `navigation.json` ของ Locale เรียงลำดับ Entry ใหม่เพื่อเปลี่ยนลำดับ Sidebar:
+
+```json:src/docs/th/navigation.json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "เริ่มต้นใช้งาน",
+    "pages": [
+      { "slug": "introduction", "title": "บทนำ" },
+      { "slug": "installation", "title": "การติดตั้ง" }
+    ]
+  }
+]
+```
+
+อัปเดตทั้ง `src/docs/en/navigation.json` และ `src/docs/th/navigation.json` เพื่อให้ทั้งสอง Locale ตรงกัน
+
+---
+
+## การเพิ่ม Locale ใหม่
+
+### 1. ลงทะเบียน Locale
+
+เพิ่ม Locale ใหม่ใน `src/i18n/routing.ts`:
+
+```ts:src/i18n/routing.ts copy="true"
+export const routing = defineRouting({
+  locales: ['en', 'th', 'ja'],
+  defaultLocale: 'th',
+})
+```
+
+### 2. เพิ่ม UI Strings
+
+สร้าง `messages/[locale].json` พร้อม Key เดียวกันทั้งหมดกับ `messages/en.json` แปลเป็นภาษาใหม่
+
+### 3. สร้างเนื้อหา Docs
+
+สร้างโฟลเดอร์ Docs ที่ `src/docs/[locale]/` ที่มี:
+
+- `navigation.json` — โครงสร้าง Sidebar (ชื่อที่แปลแล้ว)
+- `[group]/[slug].mdx` — ไฟล์เนื้อหา MDX สำหรับแต่ละหน้า
+
+<Callout type="warning">
+รักษาไฟล์การนำทางให้ตรงกัน
+
+แต่ละ `navigation.json` ของ Locale ต้องมี Group และ Page Slug เดียวกัน Slug ที่ไม่ตรงกันจะส่งผลให้ Link เสียหายหรือเกิดหน้า 404 เมื่อสลับ Locale
+</Callout>

@@ -1,0 +1,113 @@
+export const metadata = {
+    title: 'Customization | docs-template',
+    description: 'How to customize site metadata, logo, theme colors, navigation structure, and locales in docs-template.',
+}
+
+# Customization
+
+This page covers the most common ways to adapt docs-template to your project: site metadata, logo, theme colors, navigation order, and adding new locales.
+
+---
+
+## Site Metadata
+
+Edit `src/app/layout.tsx` to update the global `<title>`, `<meta name="description">`, and other head tags that apply to every page.
+
+```tsx:src/app/layout.tsx copy="true"
+export const metadata: Metadata = {
+  title: 'My Docs Site',
+  description: 'Internal documentation for My Project.',
+}
+```
+
+---
+
+## Logo
+
+The docs header logo is rendered by `src/components/docs/docs-logo.tsx`. Replace the contents of that component with your own image or SVG:
+
+```tsx:src/components/docs/docs-logo.tsx copy="true"
+export default function DocsLogo() {
+  return <img src="/logo.svg" alt="My Project" className="h-6" />
+}
+```
+
+Place your logo file in the `public/` directory so it is served as a static asset.
+
+---
+
+## Theme Colors
+
+docs-template uses Tailwind CSS v4, which uses CSS custom properties for design tokens. Update the variables in `src/styles/globals.css` to change brand colors, background, and foreground tokens for both light and dark modes:
+
+```css:src/styles/globals.css copy="true"
+:root {
+  --color-primary: oklch(55% 0.2 250);
+  --color-background: oklch(99% 0 0);
+  --color-foreground: oklch(15% 0 0);
+}
+
+.dark {
+  --color-background: oklch(12% 0 0);
+  --color-foreground: oklch(95% 0 0);
+}
+```
+
+<Callout type="tip">
+Using oklch
+
+Tailwind CSS v4 recommends `oklch` for perceptually uniform colors. Adjust the lightness, chroma, and hue values to match your brand.
+</Callout>
+
+---
+
+## Navigation Structure
+
+The sidebar order matches the order of entries in each locale's `navigation.json`. Reorder entries to change the sidebar order:
+
+```json:src/docs/en/navigation.json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "Getting Started",
+    "pages": [
+      { "slug": "introduction", "title": "Introduction" },
+      { "slug": "installation", "title": "Installation" }
+    ]
+  }
+]
+```
+
+Update both `src/docs/en/navigation.json` and `src/docs/th/navigation.json` to keep the two locales in sync.
+
+---
+
+## Adding a New Locale
+
+### 1. Register the locale
+
+Add the new locale to `src/i18n/routing.ts`:
+
+```ts:src/i18n/routing.ts copy="true"
+export const routing = defineRouting({
+  locales: ['en', 'th', 'ja'],
+  defaultLocale: 'th',
+})
+```
+
+### 2. Add UI strings
+
+Create `messages/[locale].json` with all the same keys as `messages/en.json`, translated into the new language.
+
+### 3. Create docs content
+
+Create a docs folder at `src/docs/[locale]/` containing:
+
+- `navigation.json` — sidebar structure (translated titles)
+- `[group]/[slug].mdx` — MDX content files for each page
+
+<Callout type="warning">
+Keep navigation files in sync
+
+Each locale's `navigation.json` must contain the same group and page slugs. Mismatched slugs will result in broken links or 404 pages when switching locales.
+</Callout>

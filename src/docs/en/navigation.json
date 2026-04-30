@@ -4,29 +4,11 @@
     "title": "Getting Started",
     "pages": [
       { "slug": "introduction", "title": "Introduction" },
-      { "slug": "installation", "title": "Installation" }
+      { "slug": "installation", "title": "Installation" },
+      { "slug": "writing-docs", "title": "Writing Docs" },
+      { "slug": "customization", "title": "Customization" },
+      { "slug": "authentication", "title": "Authentication" },
+      { "slug": "deployment", "title": "Deployment" }
     ]
-  },
-  {
-    "slug": "writing-docs",
-    "title": "Writing Documentation",
-    "pages": [
-      { "slug": "adding-pages", "title": "Adding Pages" },
-      { "slug": "mdx-components", "title": "MDX Components" }
-    ]
-  },
-  {
-    "slug": "customization",
-    "title": "Customization",
-    "pages": [
-      { "slug": "site-settings", "title": "Site Settings" },
-      { "slug": "navigation-structure", "title": "Navigation Structure" },
-      { "slug": "adding-locales", "title": "Adding Locales" }
-    ]
-  },
-  {
-    "slug": "deployment",
-    "title": "Deployment",
-    "pages": [{ "slug": "deploying", "title": "Deploying" }]
   }
 ]

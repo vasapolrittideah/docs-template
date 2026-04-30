@@ -1,26 +1,30 @@
-import Callout from '@/components/mdx/callout';
-
 export const metadata = {
-  title: 'Installation | docs-template',
-  description: 'How to clone docs-template, install dependencies, and start the development server.',
+    title: 'Installation | docs-template',
+    description: 'How to clone the repository, install dependencies, and start the development server for docs-template.',
 }
 
 # Installation
 
-This page walks you through cloning the repository, installing dependencies, and starting the development server for the first time.
+This guide walks you through cloning the repository, installing dependencies, and running the development server locally.
 
 ---
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+Before you begin, make sure you have the following installed:
 
-- [Node.js](https://nodejs.org/) 20 or higher
-- [Bun](https://bun.sh/) (recommended) — the project uses Bun as the package manager
+- **Node.js 20+** — [Download](https://nodejs.org/)
+- **Bun** (recommended) — [Download](https://bun.sh/)
+
+<Callout type="info">
+Why Bun?
+
+The project uses Bun as its package manager and script runner. While npm or pnpm may work, all scripts and lockfiles are optimized for Bun.
+</Callout>
 
 ---
 
-## Steps
+## Setup
 
 ### 1. Clone the repository
 
@@ -29,7 +33,13 @@ git clone https://github.com/your-username/docs-template.git
 cd docs-template
 ```
 
-Alternatively, click **"Use this template"** on the GitHub repository page to create a new repository from this template without the commit history.
+Alternatively, click **"Use this template"** on the repository page on GitHub to create a new repository from this template.
+
+<Callout type="warning">
+Internal use only
+
+This repository is maintained exclusively for TCC Technology internal projects. Do not use it for public or third-party projects.
+</Callout>
 
 ### 2. Install dependencies
 
@@ -37,35 +47,61 @@ Alternatively, click **"Use this template"** on the GitHub repository page to cr
 bun install
 ```
 
-### 3. Start the development server
+### 3. Configure environment variables
+
+Copy the example environment file and fill in the required values:
+
+```bash copy="true"
+cp .env.example .env.local
+```
+
+See the [Authentication](./authentication) page for a full description of each environment variable.
+
+### 4. Start the development server
 
 ```bash copy="true"
 bun dev
 ```
 
-Open [http://localhost:4000](http://localhost:4000) in your browser. The development server automatically generates the search index before starting.
-
-<Callout type="info">
-Search index generation
-
-The `bun dev` command runs `generate-search-index` automatically before starting the server. You do not need to run it manually during development.
-</Callout>
+Open [http://localhost:4000](http://localhost:4000) in your browser. The `bun dev` command automatically generates the full-text search index before starting the server.
 
 ---
 
 ## Available Scripts
 
 | Script | Description |
-|---|---|
-| `bun dev` | Generate search index, then start development server on port 4000 |
+| ------ | ----------- |
+| `bun dev` | Generate search index, then start the development server on port 4000 |
 | `bun build` | Generate search index, then build for production |
-| `bun start` | Start production server on port 4000 |
-| `bun lint` | Run ESLint |
+| `bun start` | Start the production server on port 4000 |
+| `bun lint` | Run ESLint across the project |
 | `bun run generate-search-index` | Build the full-text search index from MDX content |
 | `bun run generate-git-metadata` | Pre-generate Git last-modified metadata for all doc pages |
 
-<Callout type="tip">
-Git metadata
+---
 
-Run `bun run generate-git-metadata` before your production build to display accurate last-modified dates and author information on each page.
+## Pre-build Scripts
+
+Two scripts prepare static assets that the site depends on. Both are called automatically by `bun dev` and `bun build`, but you can also run them manually.
+
+### Search index
+
+Scans all MDX files and writes JSON search indexes to `public/`:
+
+```bash copy="true"
+bun run generate-search-index
+```
+
+### Git metadata
+
+Reads `git log` to collect last-modified dates and authors for every doc page. The output is written to `public/git-metadata.json`:
+
+```bash copy="true"
+bun run generate-git-metadata
+```
+
+<Callout type="tip">
+Automatic on commit
+
+`generate-git-metadata` is wired to **lint-staged** and runs automatically on every `git commit`, so the metadata file stays current without any manual steps.
 </Callout>

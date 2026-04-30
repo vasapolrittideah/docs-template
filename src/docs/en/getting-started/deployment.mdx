@@ -1,0 +1,49 @@
+export const metadata = {
+  title: 'Deployment | docs-template',
+  description: 'How to deploy docs-template to Vercel, Netlify, or a self-hosted Node.js server.',
+}
+
+# Deployment
+
+docs-template can be deployed to any platform that supports Next.js. This page covers the three most common deployment targets: Vercel, Netlify, and a self-hosted Node.js server.
+
+---
+
+## Before You Deploy
+
+Make sure the following are in place before deploying:
+
+1. All required [environment variables](./authentication#environment-variables) are configured in your deployment platform.
+2. OAuth redirect URIs for Azure AD and Google are updated to point to your production domain.
+
+<Callout type="warning">
+Update redirect URIs
+
+After deploying, add `https://your-domain.com/api/auth/callback/azure-ad` and `https://your-domain.com/api/auth/callback/google` as authorized redirect URIs in your OAuth provider settings. Authentication will fail without this step.
+</Callout>
+
+---
+
+## Vercel
+
+Vercel is the recommended deployment platform for Next.js projects.
+
+1. Push your repository to GitHub, GitLab, or Bitbucket.
+2. Go to [vercel.com](https://vercel.com/) and click **Add New Project**.
+3. Import the repository.
+4. Add all required environment variables under **Environment Variables** in the project settings.
+5. Click **Deploy**.
+
+Vercel handles builds, previews, and zero-downtime deployments automatically.
+
+---
+
+## Netlify
+
+1. Push your repository to a Git provider.
+2. Go to [netlify.com](https://netlify.com/) and click **Add new site** → **Import an existing project**.
+3. Import the repository.
+4. Set the **Build command** to `bun run generate-git-metadata && bun run build` and the **Publish directory** to `.next`.
+5. Install the [Next.js on Netlify](https://docs.netlify.com/integrations/frameworks/next-js/overview/) build plugin if it is not added automatically.
+6. Add all required environment variables under **Site configuration** → **Environment variables**.
+7. Click **Deploy site**.

@@ -1,0 +1,104 @@
+export const metadata = {
+  title: 'Authentication | docs-template',
+  description: 'วิธีการทำงานของ Authentication ใน docs-template รวมถึง OAuth Provider, ผู้ใช้ที่ได้รับอนุญาต และ Environment Variable ที่จำเป็น',
+}
+
+# Authentication
+
+การเข้าถึงเว็บไซต์เอกสารถูกจำกัด เฉพาะผู้ใช้ที่ยืนยันตัวตนและมีอีเมลที่ได้รับอนุญาตเท่านั้นที่สามารถดูเนื้อหาได้ Authentication จัดการโดย NextAuth.js และรองรับ OAuth Provider สองตัว: Azure AD และ Google
+
+---
+
+## การทำงาน
+
+เมื่อผู้ใช้เข้าชมหน้า Docs ใดๆ Middleware จะตรวจสอบ Session ที่ถูกต้อง ผู้ใช้ที่ไม่ได้ยืนยันตัวตนจะถูกเปลี่ยนเส้นทางไปยังหน้า Login ที่ `/[locale]/auth/login` หลังจากลงชื่อเข้าใช้ผ่าน Azure AD หรือ Google อีเมลของผู้ใช้จะถูกตรวจสอบกับ Allow-list ก่อนที่จะอนุญาตให้เข้าถึง
+
+---
+
+## ผู้ใช้ที่ได้รับอนุญาต
+
+### ผู้ใช้ภายใน
+
+อีเมลที่ลงท้ายด้วย `@tcc-technology.com` ใดๆ จะได้รับสิทธิ์เข้าถึงโดยอัตโนมัติ — ไม่ต้องตั้งค่าเพิ่มเติม
+
+### ผู้ใช้ภายนอก
+
+เพิ่มอีเมลภายนอกในตัวแปร Environment `ALLOWED_EXTERNAL_EMAILS` เป็นรายการที่คั่นด้วยจุลภาค
+
+**ไม่มีวันหมดอายุ:**
+
+```text copy="true"
+ALLOWED_EXTERNAL_EMAILS=john@gmail.com,jane@company.com
+```
+
+**มีวันหมดอายุ (`YYYY-MM-DD`):**
+
+```text copy="true"
+ALLOWED_EXTERNAL_EMAILS=john@gmail.com:2026-12-31,jane@company.com:2026-06-30,bob@gmail.com
+```
+
+เมื่อถึงวันหมดอายุ Cookie Session ของผู้ใช้จะถูกลบในคำขอถัดไป — ผู้ใช้จะถูกลงชื่อออกโดยอัตโนมัติโดยไม่ต้องดำเนินการด้วยตนเอง
+
+<Callout type="warning">
+การหมดอายุตรวจสอบที่เที่ยงคืน UTC
+
+วันหมดอายุ `2026-12-31` มีผลตั้งแต่ **00:00 UTC** ในวันนั้น เพื่ออนุญาตการเข้าถึงจนถึงสิ้นวันตามปฏิทิน ให้ใช้ `2027-01-01` แทน
+</Callout>
+
+---
+
+## Environment Variables
+
+Environment Variable ทั้งหมดต้องถูกตั้งค่าก่อนเริ่ม Server คัดลอก `.env.example` ไปยัง `.env.local` และกรอกค่า
+
+| ตัวแปร | จำเป็น | คำอธิบาย |
+| ------- | :----: | --------- |
+| `AZURE_AD_CLIENT_ID` | ใช่ | Azure AD Application (Client) ID |
+| `AZURE_AD_CLIENT_SECRET` | ใช่ | Azure AD Client Secret |
+| `AZURE_AD_TENANT_ID` | ใช่ | Azure AD Tenant ID |
+| `GOOGLE_CLIENT_ID` | ใช่ | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | ใช่ | Google OAuth Client Secret |
+| `NEXTAUTH_SECRET` | ใช่ | Secret ที่ใช้ Sign และตรวจสอบ Session Token |
+| `NEXTAUTH_URL` | ใช่ | URL ตามมาตรฐานของเว็บไซต์ (เช่น `https://docs.example.com`) |
+| `ALLOWED_EXTERNAL_EMAILS` | ไม่ | อีเมลภายนอกที่คั่นด้วยจุลภาค แต่ละรายการอาจตามด้วย `:YYYY-MM-DD` |
+
+---
+
+## การตั้งค่า OAuth Provider
+
+### Azure AD
+
+1. ไปที่ [Azure Portal](https://portal.azure.com/) → **Azure Active Directory** → **App registrations** → **New registration**
+2. ตั้ง Redirect URI เป็น `https://your-domain.com/api/auth/callback/azure-ad`
+3. สร้าง Client Secret ใน **Certificates & secrets**
+4. คัดลอก **Application (client) ID**, **Client secret** และ **Directory (tenant) ID** ไปยัง `.env.local`
+
+### Google
+
+1. ไปที่ [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Services** → **Credentials** → **Create credentials** → **OAuth client ID**
+2. ตั้ง Authorized Redirect URI เป็น `https://your-domain.com/api/auth/callback/google`
+3. คัดลอก **Client ID** และ **Client secret** ไปยัง `.env.local`
+
+<Callout type="tip">
+การพัฒนา Local
+
+สำหรับการพัฒนา Local ให้เพิ่ม `http://localhost:4000/api/auth/callback/azure-ad` และ `http://localhost:4000/api/auth/callback/google` เป็น Redirect URI เพิ่มเติมในการตั้งค่าของ Provider แต่ละตัว
+</Callout>
+
+---
+
+## การสร้าง NEXTAUTH_SECRET
+
+สร้าง Secret แบบสุ่มที่ปลอดภัยด้วย:
+
+```bash copy="true"
+openssl rand -base64 32
+```
+
+วางผลลัพธ์เป็นค่าของ `NEXTAUTH_SECRET` ใน `.env.local`
+
+<Callout type="danger">
+อย่าเปิดเผย Secret
+
+อย่า Commit `.env.local` ไปยัง Version Control `NEXTAUTH_SECRET` ต้องเป็นความลับ — ผู้ที่มีค่านี้สามารถปลอม Session Token ได้
+</Callout>

@@ -1,0 +1,104 @@
+export const metadata = {
+  title: 'Authentication | docs-template',
+  description: 'How authentication works in docs-template, including OAuth providers, allowed users, and required environment variables.',
+}
+
+# Authentication
+
+Access to the docs site is restricted. Only authenticated users with an allowed email address can view content. Authentication is handled by NextAuth.js and supports two OAuth providers: Azure AD and Google.
+
+---
+
+## How It Works
+
+When a user visits any docs page, the middleware checks for a valid session. Unauthenticated users are redirected to the login page at `/[locale]/auth/login`. After signing in through Azure AD or Google, the user's email is checked against the allow-list before access is granted.
+
+---
+
+## Allowed Users
+
+### Internal users
+
+Any email ending in `@tcc-technology.com` is granted access automatically — no additional configuration required.
+
+### External users
+
+Add external email addresses to the `ALLOWED_EXTERNAL_EMAILS` environment variable as a comma-separated list.
+
+**Without an expiry date:**
+
+```text copy="true"
+ALLOWED_EXTERNAL_EMAILS=john@gmail.com,jane@company.com
+```
+
+**With an expiry date (`YYYY-MM-DD`):**
+
+```text copy="true"
+ALLOWED_EXTERNAL_EMAILS=john@gmail.com:2026-12-31,jane@company.com:2026-06-30,bob@gmail.com
+```
+
+When an expiry date is reached, the user's session cookie is deleted on their next request — they are signed out automatically without any manual intervention.
+
+<Callout type="warning">
+Expiry is checked at midnight UTC
+
+The expiry date `2026-12-31` takes effect at **00:00 UTC** on that day. To allow access through the end of that calendar day, use `2027-01-01` instead.
+</Callout>
+
+---
+
+## Environment Variables
+
+All environment variables must be set before starting the server. Copy `.env.example` to `.env.local` and fill in the values.
+
+| Variable | Required | Description |
+| -------- | :------: | ----------- |
+| `AZURE_AD_CLIENT_ID` | Yes | Azure AD application (client) ID |
+| `AZURE_AD_CLIENT_SECRET` | Yes | Azure AD client secret |
+| `AZURE_AD_TENANT_ID` | Yes | Azure AD tenant ID |
+| `GOOGLE_CLIENT_ID` | Yes | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Yes | Google OAuth client secret |
+| `NEXTAUTH_SECRET` | Yes | Secret used to sign and verify session tokens |
+| `NEXTAUTH_URL` | Yes | Canonical URL of the site (e.g. `https://docs.example.com`) |
+| `ALLOWED_EXTERNAL_EMAILS` | No | Comma-separated external emails, each optionally followed by `:YYYY-MM-DD` |
+
+---
+
+## Setting Up OAuth Providers
+
+### Azure AD
+
+1. Go to [Azure Portal](https://portal.azure.com/) → **Azure Active Directory** → **App registrations** → **New registration**.
+2. Set the redirect URI to `https://your-domain.com/api/auth/callback/azure-ad`.
+3. Create a client secret under **Certificates & secrets**.
+4. Copy the **Application (client) ID**, **Client secret**, and **Directory (tenant) ID** into your `.env.local`.
+
+### Google
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Services** → **Credentials** → **Create credentials** → **OAuth client ID**.
+2. Set the authorized redirect URI to `https://your-domain.com/api/auth/callback/google`.
+3. Copy the **Client ID** and **Client secret** into your `.env.local`.
+
+<Callout type="tip">
+Local development
+
+For local development, add `http://localhost:4000/api/auth/callback/azure-ad` and `http://localhost:4000/api/auth/callback/google` as additional redirect URIs in each provider's settings.
+</Callout>
+
+---
+
+## Generating NEXTAUTH_SECRET
+
+Generate a secure random secret with:
+
+```bash copy="true"
+openssl rand -base64 32
+```
+
+Paste the output as the value of `NEXTAUTH_SECRET` in `.env.local`.
+
+<Callout type="danger">
+Never expose the secret
+
+Do not commit `.env.local` to version control. `NEXTAUTH_SECRET` must remain private — anyone with this value can forge session tokens.
+</Callout>

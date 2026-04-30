@@ -1,0 +1,162 @@
+export const metadata = {
+    title: 'การเขียนเอกสาร | docs-template',
+    description: 'เรียนรู้วิธีสร้างหน้า MDX, ลงทะเบียนในการนำทาง, ใช้ Components และตั้งค่า Code Block',
+}
+
+# การเขียนเอกสาร
+
+หน้าเอกสารคือไฟล์ MDX ที่เก็บอยู่ใน `src/docs/[locale]/[group]/[slug].mdx` หน้านี้อธิบายวิธีสร้างหน้าเพจ, ลงทะเบียนในการนำทาง และใช้ Components ที่มีให้
+
+---
+
+## การเพิ่มหน้าใหม่
+
+### 1. สร้างไฟล์ MDX
+
+สร้างไฟล์ที่ `src/docs/[locale]/[group]/[slug].mdx` สำหรับแต่ละ Locale ทุกไฟล์ต้องเริ่มต้นด้วยการ Export Metadata:
+
+```mdx:src/docs/th/my-group/my-page.mdx copy="true"
+export const metadata = {
+  title: 'ชื่อหน้าของฉัน | ชื่อเว็บไซต์',
+  description: 'คำอธิบายสั้นๆ ของหน้านี้',
+}
+
+# ชื่อหน้าของฉัน
+
+เนื้อหาอยู่ที่นี่
+```
+
+### 2. ลงทะเบียนในการนำทาง
+
+เพิ่มหน้าใน `src/docs/en/navigation.json` และ `src/docs/th/navigation.json`:
+
+```json:src/docs/th/navigation.json copy="true"
+[
+  {
+    "slug": "my-group",
+    "title": "กลุ่มของฉัน",
+    "pages": [
+      { "slug": "my-page", "title": "ชื่อหน้าของฉัน" }
+    ]
+  }
+]
+```
+
+หน้าจะสามารถเข้าถึงได้ที่ `/en/docs/my-group/my-page` และ `/th/docs/my-group/my-page`
+
+---
+
+## การเพิ่มกลุ่มใหม่
+
+เพิ่ม Entry ใหม่ไปยัง Top-level Array ในทั้งสองไฟล์การนำทาง:
+
+```json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "เริ่มต้นใช้งาน",
+    "pages": [
+      { "slug": "introduction", "title": "บทนำ" }
+    ]
+  },
+  {
+    "slug": "guides",
+    "title": "คู่มือ",
+    "pages": [
+      { "slug": "configuration", "title": "การตั้งค่า" }
+    ]
+  }
+]
+```
+
+ลำดับ Sidebar ตรงกับลำดับ Entry ใน `navigation.json` เรียงลำดับ Entry ใหม่เพื่อเปลี่ยนลำดับ Sidebar
+
+---
+
+## การใช้ Components
+
+### Elements ที่ Map อัตโนมัติ
+
+Elements ต่อไปนี้ถูก Map กับ Styled Components โดยอัตโนมัติ — ไม่ต้อง Import:
+
+| Element | แสดงผลเป็น |
+| ------- | ----------- |
+| Headings (`#`, `##`, `###`) | Heading ที่มีสไตล์พร้อม Anchor Link |
+| Paragraphs | ข้อความเนื้อหาที่มีสไตล์ |
+| Lists (`-`, `1.`) | รายการ Bullet และตัวเลขที่มีสไตล์ |
+| Tables | ตารางที่ตอบสนองและมีสไตล์ |
+| Inline \`code\` | Component `InlineCode` |
+| Fenced Code Block | `CodeBlock` พร้อม Syntax Highlighting |
+| Links | Link ที่มีสไตล์ (Link ภายนอกเปิดในแท็บใหม่) |
+| `---` | Horizontal Rule ที่มีสไตล์ |
+
+### Callout
+
+ใช้ `Callout` เพื่อดึงความสนใจไปยังข้อมูลสำคัญ Import ที่ด้านบนของไฟล์ MDX:
+
+```mdx copy="true"
+import Callout from '@/components/mdx/callout'
+```
+
+จากนั้นใช้ในเนื้อหาของคุณ:
+
+```mdx copy="true"
+<Callout type="info">
+ชื่อของ Callout
+
+ข้อความเนื้อหาที่ให้รายละเอียดเพิ่มเติม
+</Callout>
+```
+
+ค่า `type` ที่ใช้ได้:
+
+| Type | กรณีการใช้งาน |
+| ---- | ------------- |
+| `info` | หมายเหตุการตั้งค่า, ข้อกำหนดเบื้องต้น, บริบท |
+| `tip` | แนวปฏิบัติที่ดี, ทางลัด |
+| `warning` | ปัญหาที่อาจเกิดขึ้น, ข้อควรระวัง |
+| `danger` | การกระทำที่ทำลายหรือไม่สามารถย้อนกลับได้ |
+
+เพิ่ม `isCollapsed` เพื่อแสดง Callout แบบยุบโดยค่าเริ่มต้น:
+
+```mdx copy="true"
+<Callout type="warning" isCollapsed>
+ยุบโดยค่าเริ่มต้น
+
+คลิกเพื่อขยายและอ่านคำเตือนนี้
+</Callout>
+```
+
+---
+
+## Code Block
+
+ใช้ Fenced Code Block พร้อม Language Identifier บน Opening Fence
+
+### ปุ่มคัดลอก
+
+เพิ่ม `copy="true"` เพื่อแสดงปุ่มคัดลอกไปยัง Clipboard:
+
+````mdx copy="true"
+```bash copy="true"
+bun install
+```
+````
+
+### ป้ายชื่อไฟล์
+
+เพิ่ม `:path/to/file` หลัง Language Identifier เพื่อแสดง Header ชื่อไฟล์เหนือ Block:
+
+````mdx copy="true"
+```ts:src/lib/example.ts copy="true"
+const x = 1;
+```
+````
+
+ข้อความหลัง `:` จะแสดงเป็น Label ซึ่งไม่มีผลต่อ Syntax Highlighting
+
+<Callout type="tip">
+ภาษาที่รองรับ
+
+Syntax Highlighting ขับเคลื่อนด้วย Shiki ภาษาใดก็ตามที่ Shiki รองรับสามารถใช้เป็น Language Identifier ได้
+</Callout>

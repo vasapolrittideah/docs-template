@@ -1,0 +1,162 @@
+export const metadata = {
+    title: 'Writing Docs | docs-template',
+    description: 'Learn how to create MDX pages, register them in navigation, use components, and configure code blocks.',
+}
+
+# Writing Docs
+
+Documentation pages are MDX files stored under `src/docs/[locale]/[group]/[slug].mdx`. This page explains how to create a page, register it in navigation, and use the available components.
+
+---
+
+## Adding a New Page
+
+### 1. Create the MDX file
+
+Create a file at `src/docs/[locale]/[group]/[slug].mdx` for each locale. Every file must start with a metadata export:
+
+```mdx:src/docs/en/my-group/my-page.mdx copy="true"
+export const metadata = {
+  title: 'My Page Title | Site Name',
+  description: 'A short description of this page.',
+}
+
+# My Page Title
+
+Content goes here.
+```
+
+### 2. Register in navigation
+
+Add the page to `src/docs/en/navigation.json` and `src/docs/th/navigation.json`:
+
+```json:src/docs/en/navigation.json copy="true"
+[
+  {
+    "slug": "my-group",
+    "title": "My Group",
+    "pages": [
+      { "slug": "my-page", "title": "My Page Title" }
+    ]
+  }
+]
+```
+
+The page will be available at `/en/docs/my-group/my-page` and `/th/docs/my-group/my-page`.
+
+---
+
+## Adding a New Group
+
+Append a new entry to the top-level array in both navigation files:
+
+```json copy="true"
+[
+  {
+    "slug": "getting-started",
+    "title": "Getting Started",
+    "pages": [
+      { "slug": "introduction", "title": "Introduction" }
+    ]
+  },
+  {
+    "slug": "guides",
+    "title": "Guides",
+    "pages": [
+      { "slug": "configuration", "title": "Configuration" }
+    ]
+  }
+]
+```
+
+The sidebar order matches the order of entries in `navigation.json`. Reorder entries to change the sidebar order.
+
+---
+
+## Using Components
+
+### Auto-mapped elements
+
+The following elements are auto-mapped to styled components — no import needed:
+
+| Element | Rendered as |
+| ------- | ----------- |
+| Headings (`#`, `##`, `###`) | Styled headings with anchor links |
+| Paragraphs | Styled body text |
+| Lists (`-`, `1.`) | Styled bullet and ordered lists |
+| Tables | Styled responsive tables |
+| Inline \`code\` | `InlineCode` component |
+| Fenced code blocks | `CodeBlock` with syntax highlighting |
+| Links | Styled links (external links open in a new tab) |
+| `---` | Styled horizontal rule |
+
+### Callout
+
+Use `Callout` to draw attention to important information. Import it at the top of your MDX file:
+
+```mdx copy="true"
+import Callout from '@/components/mdx/callout'
+```
+
+Then use it in your content:
+
+```mdx copy="true"
+<Callout type="info">
+Title of the callout
+
+Body text providing more detail.
+</Callout>
+```
+
+Available `type` values:
+
+| Type | Use case |
+| ---- | -------- |
+| `info` | Setup notes, prerequisites, context |
+| `tip` | Best practices, shortcuts |
+| `warning` | Potential issues, gotchas |
+| `danger` | Destructive or irreversible actions |
+
+Add `isCollapsed` to render the callout collapsed by default:
+
+```mdx copy="true"
+<Callout type="warning" isCollapsed>
+Collapsed by default
+
+Click to expand and read this warning.
+</Callout>
+```
+
+---
+
+## Code Blocks
+
+Use fenced code blocks with the language identifier on the opening fence.
+
+### Copy button
+
+Add `copy="true"` to show a copy-to-clipboard button:
+
+````mdx copy="true"
+```bash copy="true"
+bun install
+```
+````
+
+### File path label
+
+Append `:path/to/file` after the language identifier to display a filename header above the block:
+
+````mdx copy="true"
+```ts:src/lib/example.ts copy="true"
+const x = 1;
+```
+````
+
+The text after `:` is rendered as a label. It does not affect syntax highlighting.
+
+<Callout type="tip">
+Supported languages
+
+Syntax highlighting is powered by Shiki. Any language Shiki supports can be used as the language identifier.
+</Callout>

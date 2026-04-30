@@ -1,0 +1,49 @@
+export const metadata = {
+  title: 'การ Deploy | docs-template',
+  description: 'วิธี Deploy docs-template ไปยัง Vercel, Netlify หรือ Self-hosted Node.js Server',
+}
+
+# การ Deploy
+
+docs-template สามารถ Deploy ไปยัง Platform ใดก็ตามที่รองรับ Next.js หน้านี้ครอบคลุม Deploy Target ที่พบบ่อยที่สุดสามแบบ: Vercel, Netlify และ Self-hosted Node.js Server
+
+---
+
+## ก่อน Deploy
+
+ตรวจสอบให้แน่ใจว่าสิ่งต่อไปนี้พร้อมแล้วก่อน Deploy:
+
+1. [Environment Variable](./authentication#environment-variables) ที่จำเป็นทั้งหมดถูกตั้งค่าใน Deployment Platform ของคุณ
+2. OAuth Redirect URI สำหรับ Azure AD และ Google ถูกอัปเดตให้ชี้ไปยัง Production Domain ของคุณ
+
+<Callout type="warning">
+อัปเดต Redirect URI
+
+หลัง Deploy ให้เพิ่ม `https://your-domain.com/api/auth/callback/azure-ad` และ `https://your-domain.com/api/auth/callback/google` เป็น Authorized Redirect URI ในการตั้งค่า OAuth Provider ของคุณ Authentication จะล้มเหลวหากไม่ทำขั้นตอนนี้
+</Callout>
+
+---
+
+## Vercel
+
+Vercel เป็น Deployment Platform ที่แนะนำสำหรับโปรเจกต์ Next.js
+
+1. Push Repository ของคุณไปยัง GitHub, GitLab หรือ Bitbucket
+2. ไปที่ [vercel.com](https://vercel.com/) และคลิก **Add New Project**
+3. Import Repository
+4. เพิ่ม Environment Variable ที่จำเป็นทั้งหมดใน **Environment Variables** ในการตั้งค่าโปรเจกต์
+5. คลิก **Deploy**
+
+Vercel จัดการ Build, Preview และ Zero-downtime Deployment โดยอัตโนมัติ
+
+---
+
+## Netlify
+
+1. Push Repository ของคุณไปยัง Git Provider
+2. ไปที่ [netlify.com](https://netlify.com/) และคลิก **Add new site** → **Import an existing project**
+3. Import Repository
+4. ตั้ง **Build command** เป็น `bun run generate-git-metadata && bun run build` และ **Publish directory** เป็น `.next`
+5. ติดตั้ง [Next.js on Netlify](https://docs.netlify.com/integrations/frameworks/next-js/overview/) Build Plugin หากไม่ได้เพิ่มโดยอัตโนมัติ
+6. เพิ่ม Environment Variable ที่จำเป็นทั้งหมดใน **Site configuration** → **Environment variables**
+7. คลิก **Deploy site**
