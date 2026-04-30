@@ -47,3 +47,47 @@ Vercel handles builds, previews, and zero-downtime deployments automatically.
 5. Install the [Next.js on Netlify](https://docs.netlify.com/integrations/frameworks/next-js/overview/) build plugin if it is not added automatically.
 6. Add all required environment variables under **Site configuration** → **Environment variables**.
 7. Click **Deploy site**.
+
+---
+
+## Automated Releases (CI)
+
+This template includes a GitHub Actions workflow (`.github/workflows/release.yml`) that runs [semantic-release](https://semantic-release.gitbook.io/) on every push to `main`. It automatically bumps the version, generates a changelog, and creates a GitHub Release.
+
+### GH_TOKEN
+
+The workflow requires a repository secret named `GH_TOKEN` — a Personal Access Token (PAT) that gives `semantic-release` permission to:
+
+- Create and update GitHub Releases
+- Push the release commit back to the repo (updated `CHANGELOG.md`, `package.json`, `bun.lock`)
+
+It is stored as a secret rather than using the default `GITHUB_TOKEN` because `semantic-release` needs to push commits that can trigger other workflows — the built-in token intentionally cannot do that.
+
+#### Generating the token
+
+**Fine-grained token (recommended):**
+
+1. Go to **GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens**
+2. Click **Generate new token**, set an expiration and resource owner
+3. Under **Repository permissions**, grant:
+   - **Contents**: Read and write
+   - **Issues**: Read and write
+   - **Pull requests**: Read and write
+   - **Metadata**: Read-only (auto-selected)
+4. Click **Generate token** and copy it
+
+**Classic token:**
+
+Select the `repo` scope — that covers all the permissions `semantic-release` needs.
+
+#### Adding the secret
+
+1. Go to your repo → **Settings → Secrets and variables → Actions → New repository secret**
+2. **Name:** `GH_TOKEN`
+3. **Value:** paste the token you generated
+
+<Callout type="info">
+Using this template?
+
+Secrets are never copied when a new repository is created from a template. Each repository must add its own `GH_TOKEN` secret for the release workflow to function.
+</Callout>

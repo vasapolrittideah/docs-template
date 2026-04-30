@@ -329,3 +329,18 @@ Deploy to any platform that supports Next.js:
 - **Self-hosted** — Run `bun build && bun start` on any Node.js server.
 
 > **Note:** The search index is generated automatically by `bun build`. If you want last-modified Git metadata on your pages, prepend `bun run generate-git-metadata` to your build command: `bun run generate-git-metadata && bun run build`.
+
+### Automated Releases (CI)
+
+A GitHub Actions workflow (`.github/workflows/release.yml`) uses [semantic-release](https://semantic-release.gitbook.io/) to automate versioning and releases on every push to `main`.
+
+The workflow requires a repository secret named `GH_TOKEN` — a Personal Access Token (PAT) with the following permissions:
+
+| Token type | Required permissions |
+| ---------- | -------------------- |
+| Fine-grained | **Contents**, **Issues**, **Pull requests**: Read and write; **Metadata**: Read-only |
+| Classic | `repo` scope |
+
+To add the secret: go to your repo → **Settings → Secrets and variables → Actions → New repository secret**, set the name to `GH_TOKEN`, and paste the token.
+
+> **Using this template?** Secrets are never copied when a repository is created from a template. Each repository must add its own `GH_TOKEN` secret for the release workflow to function.
