@@ -3,13 +3,18 @@ import DocsLogo from '../docs/docs-logo';
 import ThemeToggler from '../docs/theme-toggler';
 import SearchButton from '../docs/search-button';
 import LocaleSwitcher from '../docs/locale-switcher';
+import SignOutButton from '../auth/sign-out-button';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 interface HeaderProps {
   disabled?: boolean;
   className?: string;
 }
 
-const Header = ({ disabled = false, className }: HeaderProps) => {
+const Header = async ({ disabled = false, className }: HeaderProps) => {
+  const session = await getServerSession(authOptions);
+
   return (
     <div
       className={twMerge(
@@ -24,6 +29,7 @@ const Header = ({ disabled = false, className }: HeaderProps) => {
         <div className="flex h-full items-center justify-end gap-3 lg:ml-auto">
           <LocaleSwitcher />
           <ThemeToggler />
+          {session && <SignOutButton display="icon" />}
         </div>
       </div>
     </div>
