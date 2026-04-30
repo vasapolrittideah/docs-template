@@ -13,7 +13,7 @@ const RootPage = async ({ params }: DocsPageProps) => {
 
   return (
     <div className="border-l-stroke-soft-200 border-r-stroke-soft-200 flex w-full max-w-361 grow flex-col border-r border-l px-6">
-      <div className="flex grow flex-col items-center justify-center">
+      <div className="mt-40 flex grow flex-col items-center justify-start">
         <div className="text-text-sub-600 flex flex-col">
           <h1 className="font-display mx-auto text-[45px] leading-tight font-bold sm:text-[65px] lg:text-[90px]">
             Docs Template
