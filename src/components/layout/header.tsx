@@ -6,15 +6,15 @@ import LocaleSwitcher from '../docs/locale-switcher';
 import SignOutButton from '../auth/sign-out-button';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { Session } from 'next-auth';
 
 interface HeaderProps {
   disabled?: boolean;
   className?: string;
+  session?: Session | null;
 }
 
-const Header = async ({ disabled = false, className }: HeaderProps) => {
-  const session = await getServerSession(authOptions);
-
+const Header = ({ disabled = false, className, session }: HeaderProps) => {
   return (
     <div
       className={twMerge(
@@ -34,6 +34,11 @@ const Header = async ({ disabled = false, className }: HeaderProps) => {
       </div>
     </div>
   );
+};
+
+export const AsyncHeader = async (props: Omit<HeaderProps, 'session'>) => {
+  const session = await getServerSession(authOptions);
+  return <Header {...props} session={session} />;
 };
 
 export default Header;
