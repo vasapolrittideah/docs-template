@@ -15,9 +15,14 @@ export default async function middleware(req: NextRequest) {
   const token = await getToken({ req });
 
   if (!token) {
-    const locale = routing.locales.includes(req.nextUrl.pathname.split('/')[1] as (typeof routing.locales)[number])
-      ? req.nextUrl.pathname.split('/')[1]
-      : routing.defaultLocale;
+    const cookieLocale = req.cookies.get('NEXT_LOCALE')?.value;
+    const pathLocale = req.nextUrl.pathname.split('/')[1];
+    const locale =
+      cookieLocale && routing.locales.includes(cookieLocale as (typeof routing.locales)[number])
+        ? cookieLocale
+        : routing.locales.includes(pathLocale as (typeof routing.locales)[number])
+          ? pathLocale
+          : routing.defaultLocale;
 
     return NextResponse.redirect(new URL(`/${locale}/auth/login`, req.url));
   }
