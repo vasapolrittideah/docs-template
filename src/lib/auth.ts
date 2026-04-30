@@ -1,6 +1,37 @@
+import { AllowedExternalEmail } from '@/types/auth';
 import { NextAuthOptions } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import GoogleProvider from 'next-auth/providers/google';
+
+const COMPANY_DOMAIN = 'tcc-technology.com';
+
+function getAllowedExternalEmails(): AllowedExternalEmail[] {
+  return (process.env.ALLOWED_EXTERNAL_EMAILS ?? '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const colonIndex = entry.lastIndexOf(':');
+      if (colonIndex === -1) return { email: entry.toLowerCase() };
+      const email = entry.slice(0, colonIndex).trim().toLowerCase();
+      const dateStr = entry.slice(colonIndex + 1).trim();
+      const expiresAt = dateStr ? new Date(dateStr) : undefined;
+      return { email, expiresAt };
+    });
+}
+
+function isExternalEmailAllowed(email: string): boolean {
+  const entry = getAllowedExternalEmails().find((e) => e.email === email.toLowerCase());
+  if (!entry) return false;
+  if (entry.expiresAt && entry.expiresAt < new Date()) return false;
+  return true;
+}
+
+function isInternalEmailAllowed(email: string): boolean {
+  if (email.endsWith(`@${COMPANY_DOMAIN}`)) return true;
+  return false;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -21,19 +52,24 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ profile }) {
       const email = profile?.email ?? profile?.preferred_username;
-
       if (!email) return false;
 
-      if (email.endsWith('@tcc-technology.com')) return true;
+      if (isInternalEmailAllowed(email)) return true;
 
-      const allowedExternalEmails = (process.env.ALLOWED_EXTERNAL_EMAILS ?? '')
-        .split(',')
-        .map((e) => e.trim().toLowerCase())
-        .filter(Boolean);
-
-      if (allowedExternalEmails.includes(email.toLowerCase())) return true;
+      if (isExternalEmailAllowed(email)) return true;
 
       return '/auth/unauthorized';
+    },
+    async jwt({ token }) {
+      const email = token.email;
+      if (email && !isInternalEmailAllowed(email)) {
+        if (!isExternalEmailAllowed(email)) {
+          // NextAuth v4 runtime supports returning null to delete the session
+          // cookie immediately, even though the TS type does not reflect this.
+          return null as unknown as JWT;
+        }
+      }
+      return token;
     },
     async session({ session }) {
       if (session.user?.email) {

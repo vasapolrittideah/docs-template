@@ -248,6 +248,47 @@ The sidebar order matches the order of entries in each locale's `navigation.json
 2. Create a message file at `messages/[locale].json` with all UI string keys.
 3. Create a docs folder at `src/docs/[locale]/` with a `navigation.json` and your MDX files.
 
+## Authentication
+
+Access to the docs site is restricted. Only authenticated users with an allowed email can view content.
+
+### Internal users
+
+Any email ending in `@tcc-technology.com` is granted access automatically.
+
+### External users
+
+Add external emails to the `ALLOWED_EXTERNAL_EMAILS` environment variable as a comma-separated list.
+
+**Without expiry:**
+
+```env
+ALLOWED_EXTERNAL_EMAILS=john@gmail.com,jane@company.com
+```
+
+**With expiry date (`YYYY-MM-DD`):**
+
+```env
+ALLOWED_EXTERNAL_EMAILS=john@gmail.com:2026-12-31,jane@company.com:2026-06-30,bob@gmail.com
+```
+
+When an expiry date is set and that date is reached, the user's session cookie is deleted immediately on their next request — they are signed out automatically without any manual intervention.
+
+> **Note:** The expiry date `2026-12-31` takes effect at **00:00 UTC** on that day. To allow access through the end of that day, use `2027-01-01` instead.
+
+### Environment variables
+
+| Variable | Required | Description |
+| -------- | -------- | ----------- |
+| `AZURE_AD_CLIENT_ID` | Yes | Azure AD application (client) ID |
+| `AZURE_AD_CLIENT_SECRET` | Yes | Azure AD client secret |
+| `AZURE_AD_TENANT_ID` | Yes | Azure AD tenant ID |
+| `GOOGLE_CLIENT_ID` | Yes | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Yes | Google OAuth client secret |
+| `NEXTAUTH_SECRET` | Yes | Secret used to sign session tokens |
+| `NEXTAUTH_URL` | Yes | Canonical URL of the site (e.g. `https://docs.example.com`) |
+| `ALLOWED_EXTERNAL_EMAILS` | No | Comma-separated list of allowed external emails, each optionally followed by `:YYYY-MM-DD` expiry |
+
 ## Pre-build Scripts
 
 ### Search index
