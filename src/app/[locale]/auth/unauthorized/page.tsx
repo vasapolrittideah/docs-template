@@ -27,7 +27,7 @@ const UnauthorizedPage = async () => {
               <h1 className="leading-0 font-medium tracking-tight">{t('title')}</h1>
             </div>
             <p className="text-text-sub-600">{t('description')}</p>
-            <SignOutButton />
+            <SignOutButton display="text" />
           </div>
         </div>
       </div>
