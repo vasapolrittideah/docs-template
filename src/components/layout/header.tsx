@@ -7,6 +7,7 @@ import SignOutButton from '../auth/sign-out-button';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { Session } from 'next-auth';
+import Profile from '../docs/profile';
 
 interface HeaderProps {
   disabled?: boolean;
@@ -29,7 +30,7 @@ const Header = ({ disabled = false, className, session }: HeaderProps) => {
         <div className="flex h-full items-center justify-end gap-3 lg:ml-auto">
           <LocaleSwitcher />
           <ThemeToggler />
-          {session && <SignOutButton display="icon" />}
+          {session && <Profile />}
         </div>
       </div>
     </div>

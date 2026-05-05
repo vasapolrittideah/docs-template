@@ -5,6 +5,7 @@ import { routing } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { SessionProvider } from '@/contexts/session-provider';
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -27,11 +28,13 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const sidebarGroups = await getSidebarGroups(locale);
 
   return (
-    <NextIntlClientProvider locale={locale}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <SidebarInitializer sidebarGroups={sidebarGroups} />
-        {children}
-      </ThemeProvider>
-    </NextIntlClientProvider>
+    <SessionProvider>
+      <NextIntlClientProvider locale={locale}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <SidebarInitializer sidebarGroups={sidebarGroups} />
+          {children}
+        </ThemeProvider>
+      </NextIntlClientProvider>
+    </SessionProvider>
   );
 }
