@@ -1,5 +1,6 @@
 'use client';
 
+import { CircleFlag } from 'react-circle-flags';
 import { routing, type Locale } from '@/i18n/routing';
 import * as Button from '@/components/common/button';
 import { RiTranslate2, RiCheckLine } from '@remixicon/react';
@@ -31,14 +32,22 @@ const LocaleSwitcher = () => {
           </Button.Icon>
         </Button.Root>
       </Dropdown.Trigger>
-      <Dropdown.Content align="end" className="max-w-48 p-2">
+      <Dropdown.Content align="end" className="max-w-52 p-2">
         {routing.locales.map((locale) => (
           <Dropdown.Item
             key={locale}
             onSelect={() => handleSwitch(locale)}
             className={locale === currentLocale ? 'text-text-strong-950 bg-bg-weak-50' : 'text-text-sub-600'}>
             <div className="flex w-full items-center justify-between">
-              <span>{LOCALE_LABELS[locale]}</span>
+              <div className="flex items-center">
+                <CircleFlag
+                  countryCode={locale === 'en' ? 'us' : 'th'}
+                  className="m-0 mr-3 h-6 rounded-full p-0"
+                  height={24}
+                  width={24}
+                />
+                <span>{LOCALE_LABELS[locale]}</span>
+              </div>
               {locale === currentLocale && <RiCheckLine size={20} />}
             </div>
           </Dropdown.Item>
