@@ -6,7 +6,7 @@ import Content from '@/components/layout/content';
 import Sidebar from '@/components/layout/sidebar';
 import TOC from '@/components/layout/toc';
 import { useSidebarStore } from '@/stores/sidebar-store';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/lib/navigation';
 import React, { useEffect } from 'react';
 
 interface DocsShellProps {
@@ -44,8 +44,12 @@ const DocsShell = ({ children }: DocsShellProps) => {
 
       <div className="border-l-stroke-soft-200 border-r-stroke-soft-200 relative flex w-full max-w-361 items-start border-r border-l">
         <Sidebar className="border-r-stroke-soft-200 sticky top-22 hidden h-[calc(100vh-88px)] overflow-y-auto border-r lg:block lg:w-68" />
-        {showTOC && (
+        {showTOC ? (
           <TOC className="xl:border-l-stroke-soft-200 sticky top-22 order-3 hidden h-[calc(100vh-88px)] overflow-y-auto lg:w-64 xl:block xl:border-l" />
+        ) : (
+          isGroupPage && (
+            <div className="xl:border-l-stroke-soft-200 sticky top-22 order-3 hidden h-[calc(100vh-88px)] lg:w-64 xl:block xl:border-l" />
+          )
         )}
         <div className="min-w-0 flex-1">
           {sidebarGroups.length > 0 && showTOC && (
