@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useMemo, type MouseEvent } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/lib/navigation';
 import { twMerge } from 'tailwind-merge';
 import { useSidebarStore } from '@/stores/sidebar-store';
 import * as Divider from '../common/divider';
@@ -66,16 +65,16 @@ const Sidebar = ({ className }: SidebarProps) => {
   if (sidebarGroups.length === 0) return <SidebarSkeleton className={className} />;
 
   return (
-    <nav id="sidebar" className={twMerge('flex flex-col px-8 py-6', className)}>
+    <nav id="sidebar" className={twMerge('flex flex-col px-5 py-6', className)}>
       {sidebarGroups.map((group, index) => (
         <div key={group.title}>
-          <h3 className="text-text-strong-950 text-sm font-semibold uppercase select-none">
+          <h3 className="text-text-strong-950 text-sm uppercase select-none">
             <Link
               href={`/docs/${group.group}`}
               onClick={(e) => handleGroupClick(e, group, index)}
               className={twMerge(
-                'flex items-center justify-between transition-colors hover:text-orange-800 dark:hover:text-orange-400',
-                pathname === `/docs/${group.group}` && 'text-orange-800 dark:text-orange-400',
+                'hover:text-text-strong-950 flex items-center justify-between rounded-md px-3 py-[6.5px] transition-colors',
+                pathname === `/docs/${group.group}` && 'bg-bg-weak-50 text-text-strong-950',
               )}>
               {group.title}
               <motion.div
@@ -94,7 +93,7 @@ const Sidebar = ({ className }: SidebarProps) => {
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="space-y-1 overflow-hidden [&_li:first-child]:[&_a]:mt-4">
+                className="space-y-1 overflow-hidden">
                 {group.pages.map((page) => {
                   const href = `/docs/${page.group}/${page.slug}`;
                   const isActive = pathname === href;
@@ -104,10 +103,10 @@ const Sidebar = ({ className }: SidebarProps) => {
                       <Link
                         href={href}
                         className={twMerge(
-                          'flex items-center rounded-md py-1.5 text-sm transition-colors',
+                          'flex items-center rounded-md px-3 py-[6.5px] text-sm transition-colors',
                           isActive
-                            ? 'font-semibold text-orange-800 dark:text-orange-400'
-                            : 'text-text-sub-600 hover:text-text-strong-950 font-medium',
+                            ? 'bg-bg-weak-50 text-text-strong-950 font-medium'
+                            : 'text-text-sub-600 hover:text-text-strong-950',
                         )}>
                         <span className="truncate">{page.metadata.title}</span>
                       </Link>
@@ -118,7 +117,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             )}
           </AnimatePresence>
 
-          <Divider.Root variant="line" className="my-4" />
+          <Divider.Root variant="line" className="my-2" />
         </div>
       ))}
     </nav>
