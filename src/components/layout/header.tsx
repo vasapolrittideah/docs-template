@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { Session } from 'next-auth';
 import Profile from '../docs/profile';
+import DocsSwitcher from '../docs/docs-switcher';
 
 interface HeaderProps {
   disabled?: boolean;
@@ -23,6 +24,8 @@ const Header = ({ disabled = false, className, session }: HeaderProps) => {
         className,
       )}>
       <DocsLogo />
+      <p className="text-text-disabled-300 mx-4 text-xl select-none">/</p>
+      <DocsSwitcher />
 
       <div className="flex grow items-center justify-end gap-2">
         <SearchButton disabled={disabled} />
