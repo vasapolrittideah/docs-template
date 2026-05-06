@@ -1,6 +1,12 @@
 import type { Metadata } from 'next/types';
 import { FC } from 'react';
 
+export interface DocSet {
+  slug: string;
+  title: string;
+  description?: string;
+}
+
 export interface NavigationPage {
   slug: string;
   title: string;
@@ -18,6 +24,7 @@ export interface DocMetadata extends Metadata {
 }
 
 export interface DocPage {
+  docSet: string;
   group: string;
   slug: string;
   metadata: DocMetadata;
@@ -32,6 +39,7 @@ export type SidebarPage = Omit<DocPage, 'component'>;
 
 export interface SidebarGroup {
   title: string;
+  docSet: string;
   group: string;
   pages: SidebarPage[];
 }

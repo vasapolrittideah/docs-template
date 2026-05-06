@@ -2,22 +2,21 @@
 
 import { useSidebarStore } from '@/stores/sidebar-store';
 import { SidebarGroup } from '@/types/mdx';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 interface SidebarInitializerProps {
   sidebarGroups: SidebarGroup[];
+  currentDocSet: string;
 }
 
-export const SidebarInitializer = ({ sidebarGroups }: SidebarInitializerProps) => {
+export const SidebarInitializer = ({ sidebarGroups, currentDocSet }: SidebarInitializerProps) => {
   const setSidebarGroups = useSidebarStore((state) => state.setSidebarGroups);
-  const hasInitialized = useRef(false);
+  const setCurrentDocSet = useSidebarStore((state) => state.setCurrentDocSet);
 
   useEffect(() => {
-    if (!hasInitialized.current && sidebarGroups.length > 0) {
-      setSidebarGroups(sidebarGroups);
-      hasInitialized.current = true;
-    }
-  }, [sidebarGroups, setSidebarGroups]);
+    setSidebarGroups(sidebarGroups);
+    setCurrentDocSet(currentDocSet);
+  }, [sidebarGroups, currentDocSet, setSidebarGroups, setCurrentDocSet]);
 
   return null;
 };
