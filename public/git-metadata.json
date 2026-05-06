@@ -1,50 +1,50 @@
 {
-  "en/getting-started/authentication": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "en/user-guide/getting-started/authentication": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "en/getting-started/customization": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "en/user-guide/getting-started/customization": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "en/getting-started/deployment": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "en/user-guide/getting-started/deployment": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "en/getting-started/installation": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "en/user-guide/getting-started/installation": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "en/getting-started/introduction": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "en/user-guide/getting-started/introduction": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "en/getting-started/writing-docs": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "en/user-guide/getting-started/writing-docs": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "th/getting-started/authentication": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "th/user-guide/getting-started/authentication": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "th/getting-started/customization": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "th/user-guide/getting-started/customization": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "th/getting-started/deployment": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "th/user-guide/getting-started/deployment": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "th/getting-started/installation": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "th/user-guide/getting-started/installation": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "th/getting-started/introduction": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "th/user-guide/getting-started/introduction": {
+    "lastModified": null,
+    "lastAuthor": null
   },
-  "th/getting-started/writing-docs": {
-    "lastModified": "2026-04-30T14:53:24+07:00",
-    "lastAuthor": "Vasapol Rittideah"
+  "th/user-guide/getting-started/writing-docs": {
+    "lastModified": null,
+    "lastAuthor": null
   }
 }
