@@ -68,7 +68,7 @@ const Sidebar = ({ className }: SidebarProps) => {
     <nav id="sidebar" className={twMerge('flex flex-col px-5 py-6', className)}>
       {sidebarGroups.map((group, index) => (
         <div key={group.title}>
-          <h3 className="text-text-strong-950 text-sm uppercase select-none">
+          <h3 className="text-text-strong-950 text-sm select-none">
             <Link
               href={`/docs/${group.group}`}
               onClick={(e) => handleGroupClick(e, group, index)}
