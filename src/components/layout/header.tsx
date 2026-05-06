@@ -3,20 +3,19 @@ import DocsLogo from '../docs/docs-logo';
 import ThemeToggler from '../docs/theme-toggler';
 import SearchButton from '../docs/search-button';
 import LocaleSwitcher from '../docs/locale-switcher';
-import SignOutButton from '../auth/sign-out-button';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { Session } from 'next-auth';
 import Profile from '../docs/profile';
 import DocsSwitcher from '../docs/docs-switcher';
+import { DocSet } from '@/types/mdx';
 
 interface HeaderProps {
   disabled?: boolean;
   className?: string;
   session?: Session | null;
+  docSets?: DocSet[];
 }
 
-const Header = ({ disabled = false, className, session }: HeaderProps) => {
+const Header = ({ disabled = false, className, session, docSets = [] }: HeaderProps) => {
   return (
     <div
       className={twMerge(
@@ -25,7 +24,7 @@ const Header = ({ disabled = false, className, session }: HeaderProps) => {
       )}>
       <DocsLogo />
       <p className="text-text-disabled-300 mx-4 text-xl select-none">/</p>
-      <DocsSwitcher />
+      <DocsSwitcher docSets={docSets} />
 
       <div className="flex grow items-center justify-end gap-2">
         <SearchButton disabled={disabled} />
@@ -40,9 +39,5 @@ const Header = ({ disabled = false, className, session }: HeaderProps) => {
   );
 };
 
-export const AsyncHeader = async (props: Omit<HeaderProps, 'session'>) => {
-  const session = await getServerSession(authOptions);
-  return <Header {...props} session={session} />;
-};
-
+export { type HeaderProps };
 export default Header;

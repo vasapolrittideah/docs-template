@@ -16,14 +16,17 @@ const PrevNext = () => {
   const flattenedSidebarGroups = sidebarGroups.flatMap((group) => group.pages);
   const t = useTranslations('PrevNext');
 
-  const getDocUrl = (group: string, slug: string) => `/docs/${group}/${slug}`;
-
-  // Check if we're on a group page (/docs/{group})
-  const isGroupPage = pathname.split('/').filter(Boolean).length === 2;
+  const getDocUrl = (group: string, slug: string, docSet: string) => `/docs/${docSet}/${group}/${slug}`;
 
   const { prevPage, nextPage } = useMemo(() => {
-    if (isGroupPage) {
-      const groupIndex = sidebarGroups.findIndex((g) => `/docs/${g.group}` === pathname);
+    const segments = pathname.split('/').filter(Boolean);
+    const docsIdx = segments.indexOf('docs');
+    const docsRelative = docsIdx >= 0 ? segments.slice(docsIdx + 1) : [];
+    const onGroupPage = docsRelative.length === 2;
+
+    if (onGroupPage) {
+      const [docSet, group] = docsRelative;
+      const groupIndex = sidebarGroups.findIndex((g) => g.docSet === docSet && g.group === group);
       const prevGroup = groupIndex > 0 ? sidebarGroups[groupIndex - 1] : null;
       const currentGroup = sidebarGroups[groupIndex];
 
@@ -33,14 +36,16 @@ const PrevNext = () => {
       };
     }
 
-    const currentLinkIndex = flattenedSidebarGroups.findIndex((page) => getDocUrl(page.group, page.slug) === pathname);
+    const currentLinkIndex = flattenedSidebarGroups.findIndex(
+      (page) => getDocUrl(page.group, page.slug, page.docSet) === pathname,
+    );
 
     return {
       prevPage: currentLinkIndex > 0 ? flattenedSidebarGroups[currentLinkIndex - 1] : null,
       nextPage:
         currentLinkIndex < flattenedSidebarGroups.length - 1 ? flattenedSidebarGroups[currentLinkIndex + 1] : null,
     };
-  }, [isGroupPage, sidebarGroups, flattenedSidebarGroups, pathname]);
+  }, [sidebarGroups, flattenedSidebarGroups, pathname]);
 
   return (
     <>
@@ -50,7 +55,7 @@ const PrevNext = () => {
           <Button.Root
             variant="neutral"
             mode="stroke"
-            onClick={() => router.push(getDocUrl(prevPage.group, prevPage.slug))}
+            onClick={() => router.push(getDocUrl(prevPage.group, prevPage.slug, prevPage.docSet))}
             className="flex h-20 w-full items-center justify-start gap-3 shadow-2xl hover:-translate-x-1 sm:w-[50%]">
             <div className="w-fit">
               <RiArrowLeftLine size={20} />
@@ -68,7 +73,7 @@ const PrevNext = () => {
           <Button.Root
             variant="neutral"
             mode="stroke"
-            onClick={() => router.push(getDocUrl(nextPage.group, nextPage.slug))}
+            onClick={() => router.push(getDocUrl(nextPage.group, nextPage.slug, nextPage.docSet))}
             className="flex h-20 w-full items-center justify-end gap-3 hover:translate-x-1 sm:w-[50%]">
             <div className="flex w-full flex-col items-end gap-0.5">
               <span>{t('next')}</span>

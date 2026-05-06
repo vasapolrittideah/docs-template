@@ -18,10 +18,15 @@ const DocsShell = ({ children }: DocsShellProps) => {
   const pathname = usePathname();
 
   const segments = pathname.split('/').filter(Boolean);
-  const isRootPage = segments.at(-1) === 'docs' || segments.length === 0;
-  const isGroupPage = !isRootPage && segments.length === 2;
-  const showSidebar = !isRootPage;
-  const showTOC = !isRootPage && !isGroupPage;
+  // segments: [locale?, 'docs', docSet, group?, slug?]
+  const docsIndex = segments.indexOf('docs');
+  const docsRelative = docsIndex >= 0 ? segments.slice(docsIndex + 1) : [];
+  // docsRelative: [] | [docSet] | [docSet, group] | [docSet, group, slug]
+  const isRootPage = docsRelative.length === 0;
+  const isDocSetPage = docsRelative.length === 1;
+  const isGroupPage = docsRelative.length === 2;
+  const showSidebar = !isRootPage && !isDocSetPage;
+  const showTOC = showSidebar && !isGroupPage;
 
   useEffect(() => {
     if (!window.location.hash) {

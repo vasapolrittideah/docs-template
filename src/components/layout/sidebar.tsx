@@ -33,12 +33,15 @@ const Sidebar = ({ className }: SidebarProps) => {
   const activeGroupIndex = useMemo(() => {
     return sidebarGroups.findIndex(
       (group) =>
-        `/docs/${group.group}` === pathname ||
-        group.pages.some((page) => `/docs/${page.group}/${page.slug}` === pathname),
+        `/docs/${group.docSet}/${group.group}` === pathname ||
+        group.pages.some((page) => `/docs/${page.docSet}/${page.group}/${page.slug}` === pathname),
     );
   }, [sidebarGroups, pathname]);
 
-  const isGroupPage = pathname.split('/').filter(Boolean).length === 2;
+  const docsSegments = pathname.split('/').filter(Boolean);
+  const docsIdx = docsSegments.indexOf('docs');
+  const docsRelative = docsIdx >= 0 ? docsSegments.slice(docsIdx + 1) : [];
+  const isGroupPage = docsRelative.length === 2;
 
   // Merge user toggles with auto-open for active group (only on doc pages)
   const openGroups = useMemo(() => {
@@ -51,7 +54,7 @@ const Sidebar = ({ className }: SidebarProps) => {
   }, [userToggledGroups, activeGroupIndex, isGroupPage]);
 
   const handleGroupClick = (e: MouseEvent<HTMLAnchorElement>, group: SidebarGroup, index: number) => {
-    const isCurrentGroupPage = pathname === `/docs/${group.group}`;
+    const isCurrentGroupPage = pathname === `/docs/${group.docSet}/${group.group}`;
     if (isCurrentGroupPage) {
       e.preventDefault();
     }
@@ -70,11 +73,11 @@ const Sidebar = ({ className }: SidebarProps) => {
         <div key={group.title}>
           <h3 className="text-text-strong-950 text-sm select-none">
             <Link
-              href={`/docs/${group.group}`}
+              href={`/docs/${group.docSet}/${group.group}`}
               onClick={(e) => handleGroupClick(e, group, index)}
               className={twMerge(
                 'hover:text-text-strong-950 flex items-center justify-between rounded-md px-3 py-[6.5px] transition-colors',
-                pathname === `/docs/${group.group}` && 'bg-bg-weak-50 text-text-strong-950',
+                pathname === `/docs/${group.docSet}/${group.group}` && 'bg-bg-weak-50 text-text-strong-950',
               )}>
               {group.title}
               <motion.div
@@ -95,7 +98,7 @@ const Sidebar = ({ className }: SidebarProps) => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="space-y-1 overflow-hidden">
                 {group.pages.map((page) => {
-                  const href = `/docs/${page.group}/${page.slug}`;
+                  const href = `/docs/${page.docSet}/${page.group}/${page.slug}`;
                   const isActive = pathname === href;
 
                   return (

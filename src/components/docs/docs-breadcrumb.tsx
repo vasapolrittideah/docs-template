@@ -4,12 +4,13 @@ import { RiArrowRightSLine, RiHomeLine } from '@remixicon/react';
 import _ from 'lodash';
 
 interface DocsBreadcrumbProps {
+  docSet: string;
   group: string;
   groupTitle?: string;
   docTitle?: string;
 }
 
-const DocsBreadcrumb = ({ group, groupTitle, docTitle }: DocsBreadcrumbProps) => {
+const DocsBreadcrumb = ({ docSet, group, groupTitle, docTitle }: DocsBreadcrumbProps) => {
   return (
     <Breadcrumb.Root className="mb-8">
       <Breadcrumb.Item asChild>
@@ -21,7 +22,7 @@ const DocsBreadcrumb = ({ group, groupTitle, docTitle }: DocsBreadcrumbProps) =>
       <Breadcrumb.ArrowIcon as={RiArrowRightSLine} />
 
       <Breadcrumb.Item asChild active={docTitle == undefined}>
-        <Link href={`/docs/${group}`}>{groupTitle ?? _.startCase(group)}</Link>
+        <Link href={`/docs/${docSet}/${group}`}>{groupTitle ?? _.startCase(group)}</Link>
       </Breadcrumb.Item>
 
       {docTitle && (

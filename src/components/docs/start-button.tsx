@@ -9,7 +9,7 @@ const StartButton = () => {
   const t = useTranslations('DocsPage');
 
   return (
-    <FancyButton.Root variant="primary" onClick={() => router.push('/docs/getting-started/introduction')}>
+    <FancyButton.Root variant="primary" onClick={() => router.push('/docs/user-guide/getting-started/introduction')}>
       <span>{t('button')}</span>
     </FancyButton.Root>
   );
