@@ -31,7 +31,7 @@ const LocaleSwitcher = () => {
           </Button.Icon>
         </Button.Root>
       </Dropdown.Trigger>
-      <Dropdown.Content align="end" className="max-w-48 p-2">
+      <Dropdown.Content align="end" className="max-w-52 p-2">
         {routing.locales.map((locale) => (
           <Dropdown.Item
             key={locale}
