@@ -3,6 +3,7 @@ import path from 'node:path';
 import _ from 'lodash';
 import { SidebarPage, SidebarGroup, DocPage, DocMetadata, HeadingNode, NavigationGroup, DocSet } from '@/types/mdx';
 import { getLastAuthor, getLastModified } from './git';
+import { canAccess } from './dac';
 
 const DOCS_PATH = (locale: string) => path.join(process.cwd(), 'src', 'docs', locale);
 
@@ -190,4 +191,34 @@ export const getTOCHeadings = (mdxContent: string): HeadingNode[] => {
   });
 
   return uniqueHeadings;
+};
+
+// Get sidebar groups filtered by the user's access permissions
+export const getSidebarGroupsFiltered = async (
+  locale: string,
+  docSet: string,
+  email: string | null | undefined,
+): Promise<SidebarGroup[]> => {
+  const groups = await getSidebarGroups(locale, docSet);
+
+  const filtered = await Promise.all(
+    groups.map(async (group) => {
+      const canAccessGroup = await canAccess(email, docSet, group.group);
+      if (!canAccessGroup) return null;
+
+      const filteredPages = await Promise.all(
+        group.pages.map(async (page) => {
+          const accessible = await canAccess(email, docSet, group.group, page.slug);
+          return accessible ? page : null;
+        }),
+      );
+
+      const accessiblePages = filteredPages.filter((p): p is SidebarPage => p !== null);
+      if (!accessiblePages.length) return null;
+
+      return { ...group, pages: accessiblePages };
+    }),
+  );
+
+  return filtered.filter((g): g is SidebarGroup => g !== null);
 };

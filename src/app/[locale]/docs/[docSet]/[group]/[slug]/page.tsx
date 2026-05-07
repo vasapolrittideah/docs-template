@@ -3,6 +3,10 @@ import DocsBreadcrumb from '@/components/docs/docs-breadcrumb';
 import { TOCInitializer } from '@/components/docs/toc-initializer';
 import { getDocPage, getGroupMeta, getTOCHeadings, listDocSets, listDocPages } from '@/lib/mdx';
 import { setRequestLocale } from 'next-intl/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { canAccess } from '@/lib/dac';
+import { redirect } from 'next/navigation';
 
 interface DocPageProps {
   params: Promise<{ locale: string; docSet: string; group: string; slug: string }>;
@@ -11,6 +15,14 @@ interface DocPageProps {
 const DocPage = async ({ params }: DocPageProps) => {
   const { locale, docSet, group, slug } = await params;
   setRequestLocale(locale);
+
+  const session = await getServerSession(authOptions);
+  const email = session?.user?.email;
+
+  const allowed = await canAccess(email, docSet, group, slug);
+  if (!allowed) {
+    redirect(email ? `/${locale}/auth/forbidden` : `/${locale}/auth/login`);
+  }
 
   const [{ component: MDXComponent, metadata, rawContent, lastModified, lastAuthor }, groupMeta] = await Promise.all([
     getDocPage(locale, docSet, group, slug),

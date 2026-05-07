@@ -1,11 +1,15 @@
 import Link from 'next/link';
-import { getGroupMeta, getSidebarGroups, listDocSets, listDocGroups } from '@/lib/mdx';
+import { getGroupMeta, getSidebarGroupsFiltered, listDocGroups } from '@/lib/mdx';
 import { TOCInitializer } from '@/components/docs/toc-initializer';
 import Headings from '@/components/mdx/headings';
 import Footer from '@/components/layout/footer';
 import * as Divider from '@/components/common/divider';
 import DocsBreadcrumb from '@/components/docs/docs-breadcrumb';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { canAccess } from '@/lib/dac';
+import { redirect } from 'next/navigation';
 
 interface GroupPageProps {
   params: Promise<{ locale: string; docSet: string; group: string }>;
@@ -14,8 +18,17 @@ interface GroupPageProps {
 const GroupPage = async ({ params }: GroupPageProps) => {
   const { locale, docSet, group } = await params;
   setRequestLocale(locale);
+
+  const session = await getServerSession(authOptions);
+  const email = session?.user?.email;
+
+  const allowed = await canAccess(email, docSet, group);
+  if (!allowed) {
+    redirect(email ? `/${locale}/auth/forbidden` : `/${locale}/auth/login`);
+  }
+
   const [navGroups, groupMeta, t] = await Promise.all([
-    getSidebarGroups(locale, docSet),
+    getSidebarGroupsFiltered(locale, docSet, email),
     getGroupMeta(locale, docSet, group),
     getTranslations('GroupPage'),
   ]);
@@ -66,7 +79,7 @@ export const generateStaticParams = async ({ params }: { params: { locale: strin
 
 export const generateMetadata = async ({ params }: GroupPageProps) => {
   const { locale, docSet, group } = await params;
-  const navGroups = await getSidebarGroups(locale, docSet);
+  const navGroups = await getSidebarGroupsFiltered(locale, docSet, null);
   const navGroup = navGroups.find((g) => g.group === group);
 
   return {

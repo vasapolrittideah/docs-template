@@ -1,9 +1,12 @@
 import { SidebarInitializer } from '@/components/docs/sidebar-initializer';
-import { getSidebarGroups, listDocSets } from '@/lib/mdx';
+import { getSidebarGroupsFiltered, listDocSets } from '@/lib/mdx';
 import React from 'react';
 import { setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { canAccess } from '@/lib/dac';
 
 interface DocSetLayoutProps {
   children: React.ReactNode;
@@ -23,7 +26,15 @@ const DocSetLayout = async ({ children, params }: DocSetLayoutProps) => {
   const validDocSet = docSets.find((ds) => ds.slug === docSet);
   if (!validDocSet) notFound();
 
-  const sidebarGroups = await getSidebarGroups(locale, docSet);
+  const session = await getServerSession(authOptions);
+  const email = session?.user?.email;
+
+  const allowed = await canAccess(email, docSet);
+  if (!allowed) {
+    redirect(email ? `/${locale}/auth/forbidden` : `/${locale}/auth/login`);
+  }
+
+  const sidebarGroups = await getSidebarGroupsFiltered(locale, docSet, email);
 
   return (
     <>

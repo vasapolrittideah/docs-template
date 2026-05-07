@@ -1,0 +1,21 @@
+{
+  "externalEmails": [{ "email": "vasapol.rittideah@gmail.com" }],
+  "rules": [
+    {
+      "docSet": "example-private",
+      "allowedEmails": ["partner@example.com"],
+      "allowedDomains": ["partner.com"]
+    },
+    {
+      "docSet": "example-private",
+      "group": "restricted-group",
+      "allowedEmails": ["lead@tcc-technology.com"]
+    },
+    {
+      "docSet": "example-private",
+      "group": "restricted-group",
+      "slug": "top-secret",
+      "allowedEmails": ["cto@tcc-technology.com"]
+    }
+  ]
+}
