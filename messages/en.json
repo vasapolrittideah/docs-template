@@ -62,7 +62,8 @@
     "description": "Sorry! You don't have permission to access this documentation. Please use your company email or an authorized email to sign in. Contact an admin to request access."
   },
   "ForbiddenPage": {
-    "title": "Access Denied",
-    "description": "Sorry! Your account does not have permission to view this document. Contact an admin to request access."
+    "title": "Forbidden",
+    "description": "Sorry! Your account does not have permission to view this document. Contact an admin to request access.",
+    "back": "Go back home"
   }
 }
