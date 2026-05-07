@@ -70,6 +70,12 @@ export async function canAccess(
   slug?: string,
 ): Promise<boolean> {
   const config = await loadAccessControlConfig();
+
+  // Admin emails bypass all rules
+  if (email && (config.adminEmails ?? []).some((a) => a.toLowerCase() === email.toLowerCase())) {
+    return true;
+  }
+
   const rule = findMatchingRule(config.rules, docSet, group, slug);
 
   // No rule applies → allow everyone

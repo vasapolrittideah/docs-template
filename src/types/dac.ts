@@ -14,6 +14,10 @@ export interface ExternalEmail {
 
 export interface AccessControlConfig {
   /**
+   * Emails that bypass all rules and can access every document.
+   */
+  adminEmails?: string[];
+  /**
    * List of external (non-company) emails allowed to sign in via Google.
    * Supports an optional expiresAt (ISO date string) per entry.
    */
