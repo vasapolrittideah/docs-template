@@ -18,6 +18,7 @@ const config = {
         'build', // Build related changes
       ],
     ],
+    'body-max-line-length': [0],
   },
 };
 
