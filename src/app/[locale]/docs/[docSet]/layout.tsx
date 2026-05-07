@@ -1,9 +1,8 @@
 import { SidebarInitializer } from '@/components/docs/sidebar-initializer';
-import { getSidebarGroupsFiltered, listDocSets } from '@/lib/mdx';
+import { getSidebarGroups, getSidebarGroupsFiltered, listDocSets } from '@/lib/mdx';
 import React from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound, redirect } from 'next/navigation';
-import { routing } from '@/i18n/routing';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { canAccess } from '@/lib/dac';
@@ -34,7 +33,15 @@ const DocSetLayout = async ({ children, params }: DocSetLayoutProps) => {
     redirect(email ? `/${locale}/auth/forbidden` : `/${locale}/auth/login`);
   }
 
-  const sidebarGroups = await getSidebarGroupsFiltered(locale, docSet, email);
+  const [sidebarGroups, allGroups] = await Promise.all([
+    getSidebarGroupsFiltered(locale, docSet, email),
+    getSidebarGroups(locale, docSet),
+  ]);
+
+  // Groups exist but none accessible → user is blocked at group level
+  if (allGroups.length > 0 && sidebarGroups.length === 0) {
+    redirect(email ? `/${locale}/auth/forbidden` : `/${locale}/auth/login`);
+  }
 
   return (
     <>
