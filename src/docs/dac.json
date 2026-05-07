@@ -1,10 +1,16 @@
 {
-  "externalEmails": [{ "email": "vasapol.rittideah@gmail.com" }],
+  "externalEmails": [
+    {
+      "email": "vasapol.rittideah@gmail.com",
+      "expiresAt": "2026-12-31"
+    }
+  ],
   "rules": [
     {
       "docSet": "example-private",
       "allowedEmails": ["partner@example.com"],
-      "allowedDomains": ["partner.com"]
+      "allowedDomains": ["partner.com"],
+      "expiresAt": "2026-12-31"
     },
     {
       "docSet": "example-private",

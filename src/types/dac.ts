@@ -4,6 +4,7 @@ export interface AccessRule {
   slug?: string;
   allowedEmails?: string[];
   allowedDomains?: string[];
+  expiresAt?: string;
 }
 
 export interface ExternalEmail {

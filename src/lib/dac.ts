@@ -21,8 +21,13 @@ export async function isExternalEmailAllowed(email: string): Promise<boolean> {
   return true;
 }
 
+function isRuleExpired(rule: AccessRule): boolean {
+  return !!rule.expiresAt && new Date(rule.expiresAt) < new Date();
+}
+
 function findMatchingRule(rules: AccessRule[], docSet: string, group?: string, slug?: string): AccessRule | null {
   // Most specific match wins: slug-level > group-level > docSet-level
+  // Expired rules are still matched — expiry is evaluated by the caller
   if (slug && group) {
     const slugRule = rules.find((r) => r.docSet === docSet && r.group === group && r.slug === slug);
     if (slugRule) return slugRule;
@@ -69,6 +74,9 @@ export async function canAccess(
 
   // No rule applies → allow everyone
   if (!rule) return true;
+
+  // Rule has expired → deny regardless of email
+  if (isRuleExpired(rule)) return false;
 
   // Rule exists → require an authenticated user
   if (!email) return false;
