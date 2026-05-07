@@ -6,6 +6,7 @@ import { useSidebarStore } from '@/stores/sidebar-store';
 import { DocSet } from '@/types/mdx';
 import { RiCheckLine } from '@remixicon/react';
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 interface DocsSwitcherProps {
   docSets: DocSet[];
@@ -37,13 +38,26 @@ const DocsSwitcher = ({ docSets }: DocsSwitcherProps) => {
                   ? 'text-text-sub-600 hover:text-text-strong-950 bg-bg-weak-50'
                   : 'text-text-sub-600 hover:text-text-strong-950'
               }
-              onSelect={() => router.push(`/docs/${ds.slug}`)}>
+              onSelect={() => {
+                if (isActive) return;
+                router.push(`/docs/${ds.slug}`);
+              }}>
               <div className="flex w-full items-center justify-between gap-3">
-                <div className="flex min-w-0 flex-col gap-0.5">
+                <div className="flex min-w-0 flex-col gap-1">
                   <span className="text-text-strong-950 font-medium">{ds.title}</span>
-                  {ds.description && <span className="truncate text-xs">{ds.description}</span>}
+                  {ds.description && (
+                    <span
+                      className={twMerge('truncate text-xs', isActive ? 'text-text-strong-950' : 'text-text-sub-600')}>
+                      {ds.description}
+                    </span>
+                  )}
                 </div>
-                <RiCheckLine size={20} className={isActive ? 'shrink-0' : 'shrink-0 opacity-0'} />
+                <RiCheckLine
+                  size={20}
+                  className={twMerge(
+                    isActive ? 'text-text-strong-950 shrink-0' : 'text-text-sub-600 shrink-0 opacity-0',
+                  )}
+                />
               </div>
             </Dropdown.Item>
           );
