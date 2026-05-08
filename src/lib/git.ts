@@ -1,13 +1,7 @@
+import { GitMetadataMap } from '@/types/git';
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-
-interface GitMetadata {
-  lastModified: string | null;
-  lastAuthor: string | null;
-}
-
-type GitMetadataMap = Record<string, GitMetadata>;
 
 // Cache for git metadata
 let gitMetadataCache: GitMetadataMap | null = null;
