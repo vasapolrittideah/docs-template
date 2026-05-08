@@ -1,15 +1,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { AccessControlConfig, AccessRule } from '@/types/dac';
+import { DacConfig, AccessRule } from '@/types/dac';
 
 const DAC_PATH = path.join(process.cwd(), 'src', 'docs', 'dac.json');
 
-export async function loadAccessControlConfig(): Promise<AccessControlConfig> {
+export async function loadDacConfig(): Promise<DacConfig> {
   try {
     const content = await fs.readFile(DAC_PATH, 'utf-8');
-    return JSON.parse(content) as AccessControlConfig;
+    return JSON.parse(content) as DacConfig;
   } catch {
-    return { externalEmails: [], rules: [] };
+    return { adminEmails: [], externalEmails: [], rules: [] };
   }
 }
 
@@ -18,7 +18,7 @@ export function isInternalEmailAllowed(email: string): boolean {
 }
 
 export async function isExternalEmailAllowed(email: string): Promise<boolean> {
-  const config = await loadAccessControlConfig();
+  const config = await loadDacConfig();
   const entry = (config.externalEmails ?? []).find((e) => e.email.toLowerCase() === email.toLowerCase());
   if (!entry) return false;
   if (entry.expiresAt && new Date(entry.expiresAt) < new Date()) return false;
@@ -73,7 +73,7 @@ export async function canAccess(
   group?: string,
   slug?: string,
 ): Promise<boolean> {
-  const config = await loadAccessControlConfig();
+  const config = await loadDacConfig();
 
   // Admin emails bypass all rules
   if (email && (config.adminEmails ?? []).some((a) => a.toLowerCase() === email.toLowerCase())) {

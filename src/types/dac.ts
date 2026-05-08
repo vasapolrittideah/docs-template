@@ -12,7 +12,7 @@ export interface ExternalEmail {
   expiresAt?: string;
 }
 
-export interface AccessControlConfig {
+export interface DacConfig {
   /**
    * Emails that bypass all rules and can access every document.
    */
