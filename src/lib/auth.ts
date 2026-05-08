@@ -2,13 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import GoogleProvider from 'next-auth/providers/google';
-import { isExternalEmailAllowed } from './dac';
-
-const COMPANY_DOMAIN = 'tcc-technology.com';
-
-function isInternalEmailAllowed(email: string): boolean {
-  return email.endsWith(`@${COMPANY_DOMAIN}`);
-}
+import { isExternalEmailAllowed, isInternalEmailAllowed } from './dac';
 
 export const authOptions: NextAuthOptions = {
   providers: [

@@ -13,6 +13,10 @@ export async function loadAccessControlConfig(): Promise<AccessControlConfig> {
   }
 }
 
+export function isInternalEmailAllowed(email: string): boolean {
+  return email.endsWith(`@${process.env.INTERNAL_EMAIL_DOMAIN}`);
+}
+
 export async function isExternalEmailAllowed(email: string): Promise<boolean> {
   const config = await loadAccessControlConfig();
   const entry = (config.externalEmails ?? []).find((e) => e.email.toLowerCase() === email.toLowerCase());
