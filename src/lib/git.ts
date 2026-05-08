@@ -22,7 +22,7 @@ const loadGitMetadata = (): GitMetadataMap => {
   }
 };
 
-// Convert file path to slug (e.g., "src/docs/en/group/page.mdx" -> "en/group/page")
+// Convert file path to slug (e.g., "src/docs/en/user-guide/getting-started/introduction.mdx" -> "en/user-guide/getting-started/introduction")
 const filePathToSlug = (filePath: string): string => {
   return filePath.replace(/^src\/docs\//, '').replace(/\.mdx$/, '');
 };
