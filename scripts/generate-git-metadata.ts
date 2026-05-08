@@ -12,12 +12,6 @@ interface GitMetadata {
 
 type GitMetadataMap = Record<string, GitMetadata>;
 
-// Parse a numeric-prefixed name (e.g., "01-introduction") into its clean slug
-const parsePrefixedName = (name: string): string => {
-  const match = /^(\d+)-(.+)$/.exec(name);
-  return match ? match[2] : name;
-};
-
 const getGitMetadata = (filePath: string): GitMetadata => {
   let lastModified: string | null = null;
   let lastAuthor: string | null = null;
@@ -71,10 +65,7 @@ const collectGitMetadata = async (): Promise<GitMetadataMap> => {
           .replace(DOCS_PATH, '')
           .replace(/\\/g, '/')
           .replace(/\.mdx$/, '')
-          .replace(/^\/+/, '')
-          .split('/')
-          .map((segment) => parsePrefixedName(segment))
-          .join('/');
+          .replace(/^\/+/, '');
 
         const gitMetadata = getGitMetadata(relativePath);
         metadata[slug] = gitMetadata;

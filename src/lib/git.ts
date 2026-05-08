@@ -22,20 +22,9 @@ const loadGitMetadata = (): GitMetadataMap => {
   }
 };
 
-// Parse a numeric-prefixed name (e.g., "01-introduction") into its clean slug
-const parsePrefixedName = (name: string): string => {
-  const match = /^(\d+)-(.+)$/.exec(name);
-  return match ? match[2] : name;
-};
-
-// Convert file path to slug (e.g., "src/docs/01-group/02-page.mdx" -> "group/page")
+// Convert file path to slug (e.g., "src/docs/en/group/page.mdx" -> "en/group/page")
 const filePathToSlug = (filePath: string): string => {
-  return filePath
-    .replace(/^src\/docs\//, '')
-    .replace(/\.mdx$/, '')
-    .split('/')
-    .map((segment) => parsePrefixedName(segment))
-    .join('/');
+  return filePath.replace(/^src\/docs\//, '').replace(/\.mdx$/, '');
 };
 
 export const getLastModified = (filePath: string): string | null => {
