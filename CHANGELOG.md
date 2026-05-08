@@ -1,3 +1,30 @@
+# [1.1.0](https://github.com/vasapolrittideah/docs-template/compare/v1.0.0...v1.1.0) (2026-05-08)
+
+
+### Bug Fixes
+
+* **dac:** redirect to first accessible group on docSet entry ([ceaa167](https://github.com/vasapolrittideah/docs-template/commit/ceaa167c5128932c117085797ef9e98be98b345e))
+* hide TOC on group pages and show empty TOC area ([bec8216](https://github.com/vasapolrittideah/docs-template/commit/bec8216f19cd90cdd1ce30c83c7c3b299d15229f))
+* update lastModified and lastAuthor fields in git-metadata.json ([bb535b3](https://github.com/vasapolrittideah/docs-template/commit/bb535b396336e60cc41d57921bad9465e3fec6f8))
+* update sidebar styling and improve link accessibility ([6f5a4cb](https://github.com/vasapolrittideah/docs-template/commit/6f5a4cbdaf64c924fca8e5beec3d7edf97940292))
+
+
+### Features
+
+* add DocSet type and multi doc set support to core lib ([5d9ad60](https://github.com/vasapolrittideah/docs-template/commit/5d9ad60cd16a6e9b384737d9faa957d66fc2bc11))
+* add DocsSwitcher component with hard-coded documentation sets ([01e4f8d](https://github.com/vasapolrittideah/docs-template/commit/01e4f8db4685986738aa01ae675a88dd5f20ec82))
+* add user profile dropdown with logout and i18n support ([38d8de0](https://github.com/vasapolrittideah/docs-template/commit/38d8de0092f0806ec020ce65d47e634379bdafd3))
+* **dac:** add adminEmails to bypass access rules ([ab87ef5](https://github.com/vasapolrittideah/docs-template/commit/ab87ef59b4e8bb7033d3ee0be39ab30b9084b023))
+* **dac:** add expiration handling for access rules and external emails ([b52f261](https://github.com/vasapolrittideah/docs-template/commit/b52f261fdda0af6d7f61bb2b54cbd01c549e8ea0))
+* **dac:** implement access control for document resources and add ForbiddenPage ([7d1dda7](https://github.com/vasapolrittideah/docs-template/commit/7d1dda794a50bd4cf6f21ec3cf9679878d66ad53))
+* **dac:** improve sidebar group handling and access checks ([630fb0f](https://github.com/vasapolrittideah/docs-template/commit/630fb0fb08618af4bc2f454c10843fa874c03e85))
+* enhance ForbiddenPage with back navigation and update translations ([8e965fc](https://github.com/vasapolrittideah/docs-template/commit/8e965fc0596945d894c66c46e1c697bfb33e1431))
+* increase max width of dropdown content in locale switcher ([164f0b6](https://github.com/vasapolrittideah/docs-template/commit/164f0b68ed957a5c437139fb0a746a8ee370afb5))
+* regenerate search indices in English and Thai ([f70dca1](https://github.com/vasapolrittideah/docs-template/commit/f70dca14bf3f1745f018b2f700288dc5c09ff44f))
+* regenerate search indices in English and Thai ([b4a60dd](https://github.com/vasapolrittideah/docs-template/commit/b4a60dd7a999f70603f391dec0a1d0c69da534e9))
+* replace [group] routes with [docSet]/[group] route structure ([ceb8530](https://github.com/vasapolrittideah/docs-template/commit/ceb8530e49ce6a3424a1d4e2325aaa6985f805aa))
+* update components to use docSet-aware URLs ([edb3d3d](https://github.com/vasapolrittideah/docs-template/commit/edb3d3d2bd429ea607914ab5a29a3116be2e3c76))
+
 # 1.0.0 (2026-04-30)
 
 
