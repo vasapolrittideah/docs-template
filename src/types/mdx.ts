@@ -21,6 +21,7 @@ export interface NavigationGroup {
 export interface DocMetadata extends Metadata {
   title: string;
   description: string;
+  updatedDate?: Date;
 }
 
 export interface DocPage {
