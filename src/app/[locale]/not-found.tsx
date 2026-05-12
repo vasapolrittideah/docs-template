@@ -23,8 +23,8 @@ const NotFound = () => {
         <div className="min-w-0 flex-1">
           <div className="mt-48 flex flex-col items-center justify-start px-6 text-center">
             <div className="text-text-strong-950 mb-14 flex flex-col text-[65px] lg:mb-20 lg:text-[90px]">
-              <h1 className="mb-16 leading-0 font-bold lg:mb-24">404</h1>
-              <h1 className="leading-0 font-medium tracking-tight">{t('title')}</h1>
+              <h1 className="mb-16 leading-px font-bold lg:mb-24">404</h1>
+              <h1 className="leading-px font-medium tracking-tight">{t('title')}</h1>
             </div>
             <p className="text-text-sub-600">{t('description')}</p>
             <Button.Root
