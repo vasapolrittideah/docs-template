@@ -25,7 +25,7 @@ const LocaleSwitcher = () => {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
-        <Button.Root variant="neutral" mode="stroke" size="medium">
+        <Button.Root variant="neutral" mode="stroke" size="medium" data-testid="locale-switcher">
           <Button.Icon>
             <RiTranslate2 size={22} />
           </Button.Icon>
