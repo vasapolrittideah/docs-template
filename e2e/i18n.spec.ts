@@ -16,9 +16,11 @@ test.describe('i18n — Routing', () => {
     await expect(page).toHaveURL(/\/en\/docs/);
   });
 
-  test('invalid locale renders a 404 page', async ({ page }) => {
-    const response = await page.goto('/xx');
+  test('invalid locale renders a not found page (404) correctly', async ({ page }) => {
+    const response = await page.goto('/en/xx');
     expect(response?.status()).toBe(404);
+    await expect(page.getByText('404')).toBeVisible();
+    await expect(page.getByText(/page not found/i)).toBeVisible();
   });
 });
 
